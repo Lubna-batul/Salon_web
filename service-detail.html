@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Details | EVolve Salon</title>
+    <meta name="description" content="Explore EVolve Salon services and request a personal appointment consultation." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="EVolve Studio home"><img class="brand-logo" src="assets/images/evolve-studio-logo.png" alt="EVolve Studio"></a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <ul class="nav-menu">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link active" href="services.html">Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="academy.html">Academy</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="menu.html">Evolve Menu</a></li>
+            <li class="nav-item mobile-book-item"><a class="nav-link" href="contact.html#booking">Book Appointment</a></li>
+          </ul>
+        </nav>
+        <div class="nav-cta"><a class="button" href="contact.html#booking">Book Appointment</a></div>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Open navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container page-hero-inner">
+          <div>
+            <div class="page-breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="services.html">Services</a><span aria-hidden="true">/</span><span id="service-detail-breadcrumb">Service</span></div>
+            <h1 id="service-detail-title">Service details</h1>
+          </div>
+          <a class="button" href="contact.html#booking">Book an appointment</a>
+        </div>
+      </section>
+
+      <section class="section" id="service-detail-content" hidden>
+        <div class="container service-detail-layout">
+          <div class="service-detail-copy">
+            <span class="eyebrow" id="service-detail-category"></span>
+            <h2 class="section-title">A service shaped around you.</h2>
+            <p class="lead" id="service-detail-description"></p>
+            <p>Every appointment begins with a conversation about your preferences and goals. Our team can talk through suitable options and answer questions before your visit.</p>
+            <div class="service-detail-actions">
+              <a class="button" href="contact.html#booking">Enquire about this service <span aria-hidden="true">→</span></a>
+              <a class="service-detail-back" href="services.html">← Back to Services</a>
+            </div>
+          </div>
+          <figure class="service-detail-media">
+            <img id="service-detail-image" src="" alt="" />
+          </figure>
+        </div>
+      </section>
+
+      <section class="section" id="service-detail-unavailable" hidden>
+        <div class="container service-detail-unavailable" role="alert">
+          <h2>Service details are unavailable.</h2>
+          <p>Choose a service from the collection to see its details, or contact our team for help.</p>
+          <a class="button" href="services.html#service-selection">Browse Services</a>
+        </div>
+      </section>
+
+      <noscript>
+        <section class="section">
+          <div class="container service-detail-unavailable">
+            <p>Enable JavaScript to view service details, or return to <a href="services.html">Services</a>.</p>
+          </div>
+        </section>
+      </noscript>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href="index.html"><img class="brand-logo" src="assets/images/evolve-studio-logo.png" alt="EVolve Studio"></a>
+            <p style="margin-top:20px; max-width:360px;">An elevated beauty destination where expertise, care and confidence come together beautifully.</p>
+          </div>
+          <div>
+            <h4>Explore</h4>
+            <ul class="footer-links">
+              <li><a href="services.html">Services</a></li>
+              <li><a href="aesthetics.html">Aesthetics</a></li>
+              <li><a href="academy.html">Academy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Visit</h4>
+            <ul class="footer-links">
+              <li><a href="menu.html">EVOLVE MENU</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <ul class="footer-links">
+              <li><a href="mailto:hello@evolvesalon.com">hello@evolvesalon.com</a></li>
+              <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+              <li>Mon–Sat: 9am–7pm</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© <span id="year"></span> <span class="brand-wordmark">evolve</span> Salon. All rights reserved.</span>
+          <span>Luxury beauty, artistry and care.</span>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
