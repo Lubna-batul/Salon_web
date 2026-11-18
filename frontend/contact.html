@@ -46,23 +46,25 @@
             <h3>Request your appointment</h3>
             <form class="form-grid contact-enquiry-form">
               <div>
-                <label>Full name<input name="name" type="text" placeholder="Your name" autocomplete="name" required /></label>
+                <label>Full name<input name="name" type="text" placeholder="Your name" autocomplete="name" maxlength="100" required /></label>
               </div>
               <div>
-                <label>Email<input name="email" type="email" placeholder="you@example.com" autocomplete="email" required /></label>
+                <label>Email<input name="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="100" required /></label>
               </div>
               <div>
-                <label>Phone<input name="phone" type="tel" placeholder="+1 (234) 567-890" autocomplete="tel" /></label>
+                <label>Phone<input name="phone" type="tel" placeholder="+1 (234) 567-890" autocomplete="tel" maxlength="15" /></label>
               </div>
               <div>
                 <label>Service<select name="service"><option>Hair styling</option><option>Men services</option><option>Women services</option><option>Colour services</option><option>Aesthetic treatment</option><option>Bridal styling</option><option>Evolve Gift</option></select></label>
               </div>
               <div class="full">
-                <label>Message<textarea name="message" placeholder="Tell us a bit about your goals..." required></textarea></label>
+                <label>Message<textarea name="message" placeholder="Tell us a bit about your goals..." maxlength="4000" required></textarea></label>
               </div>
               <div class="full">
                 <button class="button" type="submit">Send enquiry</button>
-                <p class="form-note">Your email app will open with the enquiry details ready to send.</p>
+                <p class="form-note" data-enquiry-status role="status" aria-live="polite">
+                  Sending an enquiry does not confirm an appointment; our team will follow up.
+                </p>
               </div>
             </form>
           </div>

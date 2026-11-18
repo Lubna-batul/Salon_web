@@ -1,34 +1,3 @@
-const serviceCatalog = {
-  men: [
-    { id: 'men-haircuts-styling', name: 'Haircuts & Styling', category: 'Hair studio', description: 'Consultation-led cuts and polished styling shaped around your features and daily routine.', image: 'https://images.pexels.com/photos/3037244/pexels-photo-3037244.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Barber using clippers to cut a man’s hair', anchorId: 'hair' },
-    { id: 'men-hair-wash-conditioning', name: 'Hair Wash & Conditioning', category: 'Care & cleanse', description: 'A refreshing cleanse and conditioning ritual selected for your hair and scalp needs.', image: 'https://images.pexels.com/photos/36292486/pexels-photo-36292486.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Man receiving a shampoo and rinse at a salon basin' },
-    { id: 'men-hair-spa', name: 'Hair Spa', category: 'Restore', description: 'A relaxing hair and scalp ritual with a tailored care consultation and considered finish.', image: 'https://images.pexels.com/photos/10416604/pexels-photo-10416604.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Hair mask treatment being worked through long hair' },
-    { id: 'men-beard-styling-grooming', name: 'Beard Styling & Grooming', category: 'Grooming', description: 'Detailed shaping and grooming to bring definition and balance to your beard.', image: 'https://images.pexels.com/photos/5853394/pexels-photo-5853394.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Barber shaping a man’s beard with scissors and a comb', anchorId: 'mens-hair' },
-    { id: 'men-beard-trimming', name: 'Beard Trimming', category: 'Grooming', description: 'A clean, considered trim to maintain your preferred beard length and shape.', image: 'assets/images/mens-grooming.jpg', alt: 'Barber trimming a man’s beard' },
-    { id: 'men-hair-colouring', name: 'Hair Colouring', category: 'Colour & gloss', description: 'Personalised colour refreshes and tonal work, planned around your hair goals.', image: 'https://images.pexels.com/photos/4981476/pexels-photo-4981476.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Colourist applying hair colour with a brush', anchorId: 'colour' },
-    { id: 'men-hair-treatments', name: 'Hair Treatments', category: 'Care & repair', description: 'Targeted conditioning and repair rituals to support softness, strength and shine.', image: 'https://images.pexels.com/photos/23349912/pexels-photo-23349912.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Hairdresser combing and caring for wet hair' },
-    { id: 'men-scalp-treatments', name: 'Scalp Treatments', category: 'Scalp care', description: 'A focused scalp-care consultation followed by a soothing, tailored treatment.', image: 'https://images.pexels.com/photos/17553840/pexels-photo-17553840.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Guest receiving a focused scalp massage' },
-    { id: 'men-facials', name: 'Men’s Facials', category: 'Skin rituals', description: 'A refreshing facial experience chosen to suit your skin and personal care routine.', image: 'https://images.pexels.com/photos/20861923/pexels-photo-20861923.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Man receiving a facial massage in a skincare setting', anchorId: 'skin' },
-    { id: 'men-skin-care', name: 'Skin Care', category: 'Skin & beauty', description: 'Thoughtful skin-care guidance and treatments tailored to your individual concerns.', image: 'https://images.pexels.com/photos/6763625/pexels-photo-6763625.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Man applying a face mask as part of a skincare routine' },
-    { id: 'men-head-massage', name: 'Head Massage', category: 'Relax & restore', description: 'A calming head massage designed to make space for a moment of relaxation.', image: 'https://images.pexels.com/photos/17553843/pexels-photo-17553843.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Therapist massaging a guest’s scalp' },
-    { id: 'men-manicure', name: 'Manicure', category: 'Nail care', description: 'Neat nail shaping and hand care with a clean, natural finish.', image: 'https://images.pexels.com/photos/22668317/pexels-photo-22668317.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Nail technician filing a guest’s nails during a manicure' },
-  ],
-  women: [
-    { id: 'women-haircuts-styling', name: 'Haircuts & Styling', category: 'Hair studio', description: 'Precision cuts and polished styling shaped to your features and preferences.', image: 'https://images.pexels.com/photos/8834068/pexels-photo-8834068.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Stylist cutting a woman’s hair in a salon', anchorId: 'womens-hair' },
-    { id: 'women-hair-colouring', name: 'Hair Colouring', category: 'Colour & gloss', description: 'Dimensional colour, highlights and glossing planned with a personal consultation.', image: 'https://images.pexels.com/photos/8468125/pexels-photo-8468125.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Hairdresser applying colour to a woman’s hair', anchorId: 'hair-colouring' },
-    { id: 'women-hair-spa', name: 'Hair Spa', category: 'Restore', description: 'A restorative hair and scalp ritual finished with care recommendations for home.', image: 'https://images.pexels.com/photos/7755473/pexels-photo-7755473.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Woman enjoying a hair wash at a salon basin' },
-    { id: 'women-hair-treatments', name: 'Hair Treatments', category: 'Care & repair', description: 'Targeted treatments to support softness, strength and healthy-looking shine.', image: 'https://images.pexels.com/photos/23349905/pexels-photo-23349905.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Stylist washing and caring for a guest’s hair' },
-    { id: 'women-bridal-styling', name: 'Bridal Makeup & Styling', category: 'Occasions', description: 'Thoughtful bridal makeup, styling and finishing planned around your occasion.', image: 'https://images.pexels.com/photos/37710473/pexels-photo-37710473.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Makeup artist applying makeup to a bride', anchorId: 'celebration' },
-    { id: 'women-makeup', name: 'Makeup', category: 'Makeup artistry', description: 'Makeup artistry for everyday polish or special occasions, shaped around your look.', image: 'https://images.pexels.com/photos/7290123/pexels-photo-7290123.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Makeup artist applying eye makeup' },
-    { id: 'women-manicure', name: 'Manicure', category: 'Nail care', description: 'A considered nail-care appointment with shaping and a neat, polished finish.', image: 'https://images.pexels.com/photos/7446915/pexels-photo-7446915.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Nail technician applying polish during a manicure' },
-    { id: 'women-pedicure', name: 'Pedicure', category: 'Nail care', description: 'A restorative foot-care ritual with careful grooming and a polished finish.', image: 'https://images.pexels.com/photos/34930123/pexels-photo-34930123.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Beauty technician performing a pedicure' },
-    { id: 'women-nail-art', name: 'Nail Art', category: 'Nail artistry', description: 'Personalised nail details and colour, designed with your preferred style in mind.', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80', alt: 'Nails finished with black and tortoiseshell nail art' },
-    { id: 'women-facials', name: 'Facials', category: 'Skin rituals', description: 'Hydrating and refreshing facial care selected to suit your skin goals.', image: 'assets/images/facial-treatment.jpg', alt: 'Guest receiving a professional facial mask treatment' },
-    { id: 'women-skin-treatments', name: 'Skin Treatments', category: 'Skin & beauty', description: 'Personalised skin treatments and consultations to complement your care routine.', image: 'https://images.pexels.com/photos/30809943/pexels-photo-30809943.jpeg?auto=compress&cs=tinysrgb&w=800&q=80', alt: 'Professional facial treatment being performed at a spa' },
-    { id: 'women-hair-styling', name: 'Hair Styling', category: 'Hair artistry', description: 'Occasion-ready styling and finishing, tailored to your hair and the moment.', image: 'assets/images/womens-hair.jpg', alt: 'Stylist blow-drying a guest’s hair' },
-  ],
-};
-
 const aestheticTreatmentCatalog = {
   peel: {
     title: 'Chemical Peel',
@@ -210,72 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('[data-service-grid]').forEach((grid) => {
-    const services = serviceCatalog[grid.dataset.serviceGrid];
-    if (!services) return;
-
-    services.forEach((service) => {
-      const card = document.createElement('article');
-      card.className = 'service-option-card';
-      if (service.anchorId) card.id = service.anchorId;
-
-      const image = document.createElement('img');
-      image.src = service.image;
-      image.alt = service.alt;
-      image.loading = 'lazy';
-      image.decoding = 'async';
-
-      const copy = document.createElement('div');
-      copy.className = 'service-option-copy';
-
-      const category = document.createElement('span');
-      category.className = 'eyebrow';
-      category.textContent = service.category;
-
-      const heading = document.createElement('h3');
-      heading.textContent = service.name;
-
-      const description = document.createElement('p');
-      description.textContent = service.description;
-
-      const link = document.createElement('a');
-      link.className = 'card-link';
-      link.href = `service-detail.html?service=${encodeURIComponent(service.id)}`;
-      link.setAttribute('aria-label', `Explore ${service.name}`);
-      link.append(document.createTextNode('Explore Service '));
-
-      const arrow = document.createElement('span');
-      arrow.setAttribute('aria-hidden', 'true');
-      arrow.textContent = '→';
-      link.append(arrow);
-
-      copy.append(category, heading, description, link);
-      card.append(image, copy);
-      grid.append(card);
-    });
-  });
-
-  const serviceDetailContent = document.getElementById('service-detail-content');
-  if (serviceDetailContent) {
-    const serviceId = new URLSearchParams(window.location.search).get('service');
-    const service = Object.values(serviceCatalog).flat().find((item) => item.id === serviceId);
-    const unavailableMessage = document.getElementById('service-detail-unavailable');
-
-    if (service) {
-      document.title = `${service.name} | EVolve Salon`;
-      document.getElementById('service-detail-title').textContent = service.name;
-      document.getElementById('service-detail-breadcrumb').textContent = service.name;
-      document.getElementById('service-detail-category').textContent = service.category;
-      document.getElementById('service-detail-description').textContent = service.description;
-      const image = document.getElementById('service-detail-image');
-      image.src = service.image;
-      image.alt = service.alt;
-      serviceDetailContent.hidden = false;
-    } else if (unavailableMessage) {
-      unavailableMessage.hidden = false;
-    }
-  }
-
   const treatmentRoot = document.querySelector('[data-aesthetic-treatment]');
   if (treatmentRoot) {
     const treatment = aestheticTreatmentCatalog[treatmentRoot.dataset.aestheticTreatment];
@@ -385,49 +288,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const serviceTabs = [...document.querySelectorAll('[data-service-tab]')];
-  const activateServiceTab = (tab) => {
-    serviceTabs.forEach((candidate) => {
-      const isSelected = candidate === tab;
-      const panel = document.getElementById(candidate.getAttribute('aria-controls'));
-      candidate.classList.toggle('is-active', isSelected);
-      candidate.setAttribute('aria-pressed', String(isSelected));
-      if (panel) {
-        panel.hidden = !isSelected;
-        panel.classList.toggle('is-active', isSelected);
-      }
-    });
-  };
-
-  serviceTabs.forEach((tab) => {
-    tab.addEventListener('click', () => activateServiceTab(tab));
-  });
-
-  if (window.location.hash && serviceTabs.length) {
-    const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
-    const targetPanel = target?.closest('.service-persona');
-    const matchingTab = serviceTabs.find((tab) => tab.getAttribute('aria-controls') === targetPanel?.id);
-    if (matchingTab) {
-      activateServiceTab(matchingTab);
-      target?.scrollIntoView({ block: 'start' });
+  const enquiryForm = document.querySelector('.contact-enquiry-form');
+  const requestedService = new URLSearchParams(window.location.search)
+    .get('service')
+    ?.replace(/\s+/g, ' ')
+    .trim();
+  const serviceSelect = enquiryForm?.elements.namedItem('service');
+  const enquiryMessage = enquiryForm?.elements.namedItem('message');
+  if (
+    requestedService
+    && requestedService.length <= 120
+    && serviceSelect instanceof HTMLSelectElement
+    && enquiryMessage instanceof HTMLTextAreaElement
+  ) {
+    let matchingOption = Array.from(serviceSelect.options)
+      .find((option) => option.value === requestedService);
+    if (!matchingOption) {
+      matchingOption = document.createElement('option');
+      matchingOption.value = requestedService;
+      matchingOption.textContent = requestedService;
+      serviceSelect.insertBefore(matchingOption, serviceSelect.firstElementChild);
+    }
+    serviceSelect.value = requestedService;
+    if (!enquiryMessage.value.trim()) {
+      enquiryMessage.value = `I'm interested in ${requestedService}. Please contact me with more details.`;
     }
   }
 
-  const enquiryForm = document.querySelector('.contact-enquiry-form');
-  enquiryForm?.addEventListener('submit', (event) => {
+  enquiryForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (!(enquiryForm instanceof HTMLFormElement) || !enquiryForm.reportValidity()) return;
+    if (enquiryForm.dataset.submitting === 'true') return;
+
     const formData = new FormData(enquiryForm);
-    const service = formData.get('service');
-    const subject = encodeURIComponent(`${service} enquiry`);
-    const body = encodeURIComponent([
-      `Name: ${formData.get('name')}`,
-      `Email: ${formData.get('email')}`,
-      `Phone: ${formData.get('phone') || 'Not provided'}`,
-      `Service: ${service}`,
-      '',
-      formData.get('message'),
-    ].join('\n'));
-    window.location.href = `mailto:hello@evolvesalon.com?subject=${subject}&body=${body}`;
+    const service = String(formData.get('service') || '').trim();
+    const message = String(formData.get('message') || '').trim();
+    const status = enquiryForm.querySelector('[data-enquiry-status]');
+    const submitButton = enquiryForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton?.textContent || 'Send enquiry';
+    const setStatus = (state, text) => {
+      if (!status) return;
+      status.dataset.state = state;
+      status.textContent = text;
+    };
+
+    enquiryForm.dataset.submitting = 'true';
+    enquiryForm.setAttribute('aria-busy', 'true');
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending…';
+    }
+    setStatus('pending', 'Sending your enquiry…');
+
+    try {
+      const response = await fetch('/contact-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone') || null,
+          message: service ? `Service or category: ${service}\n\n${message}` : message,
+        }),
+      });
+
+      if (response.ok) {
+        setStatus(
+          'success',
+          'Your enquiry has been received. Our team will follow up; this is not a confirmed appointment.',
+        );
+      } else if (response.status === 422) {
+        setStatus('error', 'Please check your name, email, phone and message, then try again.');
+      } else if (response.status === 503) {
+        setStatus('error', 'The enquiry service is temporarily unavailable. Please try again shortly.');
+      } else {
+        setStatus('error', 'We could not send your enquiry. Please try again or contact our team.');
+      }
+    } catch {
+      setStatus('error', 'We could not send your enquiry. Check your connection and try again.');
+    } finally {
+      enquiryForm.dataset.submitting = 'false';
+      enquiryForm.removeAttribute('aria-busy');
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    }
   });
 
   document.addEventListener('click', (event) => {

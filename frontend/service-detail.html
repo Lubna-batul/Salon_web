@@ -38,7 +38,7 @@
             <div class="page-breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="services.html">Services</a><span aria-hidden="true">/</span><span id="service-detail-breadcrumb">Service</span></div>
             <h1 id="service-detail-title">Service details</h1>
           </div>
-          <a class="button" href="contact.html#booking">Book an appointment</a>
+          <a class="button" id="service-detail-book" href="contact.html#booking">Book an appointment</a>
         </div>
       </section>
 
@@ -46,25 +46,30 @@
         <div class="container service-detail-layout">
           <div class="service-detail-copy">
             <span class="eyebrow" id="service-detail-category"></span>
-            <h2 class="section-title">A service shaped around you.</h2>
+            <h2 class="section-title">About this service</h2>
             <p class="lead" id="service-detail-description"></p>
-            <p>Every appointment begins with a conversation about your preferences and goals. Our team can talk through suitable options and answer questions before your visit.</p>
             <div class="service-detail-actions">
-              <a class="button" href="contact.html#booking">Enquire about this service <span aria-hidden="true">→</span></a>
+              <a class="button" id="service-detail-enquire" href="contact.html#booking">Enquire about this service <span aria-hidden="true">→</span></a>
               <a class="service-detail-back" href="services.html">← Back to Services</a>
             </div>
           </div>
-          <figure class="service-detail-media">
-            <img id="service-detail-image" src="" alt="" />
+          <figure class="service-detail-media" id="service-detail-image-container">
           </figure>
+        </div>
+      </section>
+
+      <section class="section" id="service-detail-loading" role="status" aria-live="polite">
+        <div class="container">
+          <p class="catalog-load-state">Loading service details…</p>
         </div>
       </section>
 
       <section class="section" id="service-detail-unavailable" hidden>
         <div class="container service-detail-unavailable" role="alert">
           <h2>Service details are unavailable.</h2>
-          <p>Choose a service from the collection to see its details, or contact our team for help.</p>
+          <p id="service-detail-unavailable-message">Choose a service from the collection to see its details, or contact our team for help.</p>
           <a class="button" href="services.html#service-selection">Browse Services</a>
+          <button class="button" id="service-detail-retry" type="button" hidden>Try again</button>
         </div>
       </section>
 
@@ -115,5 +120,6 @@
       </div>
     </footer>
     <script src="script.js"></script>
+    <script src="catalog.js"></script>
   </body>
 </html>

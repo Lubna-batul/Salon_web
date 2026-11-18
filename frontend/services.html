@@ -40,27 +40,37 @@
       </section>
 
       <section class="section" id="service-selection">
-        <div class="container">
+        <div class="container" data-services-catalog>
           <div class="services-heading">
             <div>
               <span class="eyebrow">Find your experience</span>
-              <h2 class="section-title">Services for you</h2>
+              <h2 class="section-title">Explore our services</h2>
             </div>
-            <div class="service-tabs" role="group" aria-label="Choose a service collection">
-              <button class="service-tab is-active" type="button" data-service-tab="men" aria-pressed="true" aria-controls="men-services">Men</button>
-              <button class="service-tab" type="button" data-service-tab="women" aria-pressed="false" aria-controls="women-services">Women</button>
+            <div class="service-gender-controls" role="group" aria-label="Choose service section">
+              <button class="service-gender-toggle is-active" type="button" data-gender-toggle="men" aria-pressed="true">MEN SERVICES</button>
+              <button class="service-gender-toggle" type="button" data-gender-toggle="women" aria-pressed="false">WOMEN SERVICES</button>
             </div>
           </div>
 
-          <section class="service-persona is-active" id="men-services" aria-labelledby="men-services-heading">
-            <h3 class="service-persona-title" id="men-services-heading">Men's services</h3>
-            <div class="service-option-grid" data-service-grid="men"></div>
-          </section>
+          <div class="service-explorer">
+            <aside class="service-sidebar" aria-labelledby="service-sidebar-heading">
+              <h2 id="service-sidebar-heading" data-service-sidebar-heading>MEN SERVICES</h2>
+              <button class="service-sidebar-toggle" type="button" data-service-sidebar-toggle aria-expanded="true" aria-controls="service-sidebar-navigation">
+                Categories <span aria-hidden="true">⌄</span>
+              </button>
+              <nav class="service-sidebar-navigation" id="service-sidebar-navigation" data-service-sidebar-navigation aria-label="Service categories"></nav>
+            </aside>
 
-          <section class="service-persona" id="women-services" aria-labelledby="women-services-heading" hidden>
-            <h3 class="service-persona-title" id="women-services-heading">Women's services</h3>
-            <div class="service-option-grid" data-service-grid="women"></div>
-          </section>
+            <section class="service-results" aria-labelledby="service-results-heading">
+              <div class="service-results-heading">
+                <span class="eyebrow">Available services</span>
+                <h2 class="section-title" id="service-results-heading" data-service-results-heading>All services</h2>
+              </div>
+              <div class="service-category-intro-container" data-service-category-intro hidden></div>
+              <div class="catalog-load-state" data-service-list-state role="status" aria-live="polite">Loading services…</div>
+              <div class="service-list" data-service-list></div>
+            </section>
+          </div>
         </div>
       </section>
 
@@ -128,5 +138,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="catalog.js"></script>
   </body>
 </html>
