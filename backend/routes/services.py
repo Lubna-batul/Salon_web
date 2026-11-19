@@ -1,10 +1,114 @@
 from fastapi import APIRouter, HTTPException, Path, Query
 from sqlalchemy import text
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from backend.database import engine
-from backend.schemas import CategoryPublic, ServicePublic
+from backend.models import ServiceCategory, ServiceType
+from backend.schemas import (
+    CategoryPublic,
+    ServiceCategoryCatalogPublic,
+    ServicePublic,
+    ServiceTypePublic,
+)
 
 router = APIRouter(tags=["services"])
+
+
+@router.get(
+    "/service-categories",
+    response_model=list[ServiceCategoryCatalogPublic],
+)
+def get_service_categories(
+    gender: str = Query(pattern="^(men|women)$"),
+) -> list[dict]:
+    with Session(engine) as session:
+        rows = session.execute(
+            select(
+                ServiceCategory.category_id,
+                ServiceCategory.gender,
+                ServiceCategory.category_name,
+                ServiceCategory.slug,
+                ServiceCategory.description,
+                ServiceCategory.image_path,
+                ServiceCategory.image_alt,
+            )
+            .where(
+                ServiceCategory.gender == gender,
+                ServiceCategory.is_active.is_(True),
+            )
+            .order_by(ServiceCategory.category_id)
+        ).mappings().all()
+    return [dict(row) for row in rows]
+
+
+@router.get(
+    "/service-categories/{category_id}/types",
+    response_model=list[ServiceTypePublic],
+)
+def get_service_types_for_category(
+    category_id: int = Path(gt=0),
+) -> list[dict]:
+    with Session(engine) as session:
+        category = session.get(ServiceCategory, category_id)
+        if category is None or not category.is_active:
+            raise HTTPException(status_code=404, detail="Service category not found.")
+        rows = session.execute(
+            select(
+                ServiceType.service_type_id,
+                ServiceType.category_id,
+                ServiceCategory.category_name,
+                ServiceCategory.gender,
+                ServiceType.service_name,
+                ServiceType.description,
+                ServiceType.image_path,
+                ServiceType.image_alt,
+            )
+            .join(
+                ServiceCategory,
+                ServiceType.category_id == ServiceCategory.category_id,
+            )
+            .where(
+                ServiceType.category_id == category_id,
+                ServiceType.is_active.is_(True),
+                ServiceCategory.is_active.is_(True),
+            )
+            .order_by(ServiceType.service_type_id)
+        ).mappings().all()
+    return [
+        {**dict(row), "availability_status": "enquiry_only"}
+        for row in rows
+    ]
+
+
+@router.get("/service-types/{service_type_id}", response_model=ServiceTypePublic)
+def get_service_type(service_type_id: int = Path(gt=0)) -> dict:
+    with Session(engine) as session:
+        row = session.execute(
+            select(
+                ServiceType.service_type_id,
+                ServiceType.category_id,
+                ServiceCategory.category_name,
+                ServiceCategory.gender,
+                ServiceType.service_name,
+                ServiceType.description,
+                ServiceType.image_path,
+                ServiceType.image_alt,
+            )
+            .join(
+                ServiceCategory,
+                ServiceType.category_id == ServiceCategory.category_id,
+            )
+            .where(
+                ServiceType.service_type_id == service_type_id,
+                ServiceType.is_active.is_(True),
+                ServiceCategory.is_active.is_(True),
+            )
+        ).mappings().first()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Service type not found.")
+    return {**dict(row), "availability_status": "enquiry_only"}
+
 
 SERVICE_SELECT = """
     SELECT

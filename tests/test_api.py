@@ -5,9 +5,12 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event, text
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
 from backend import database, main
+from backend.catalog_data import SERVICE_CATALOG
+from backend.models import Base, ServiceCategory, ServiceType
 from backend.routes import academy, customers, enquiries, offers, services, staff
 
 
@@ -47,6 +50,7 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     with test_engine.begin() as connection:
         for statement in schema:
             connection.execute(text(statement))
+        Base.metadata.create_all(connection)
         connection.execute(
             text(
                 "INSERT INTO categories VALUES "
@@ -81,6 +85,34 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
                 "'Skin', 'Private schedule', 'Inactive')"
             )
         )
+
+    with Session(test_engine) as session, session.begin():
+        for category_id, gender in ((1, "men"), (2, "women")):
+            category = ServiceCategory(
+                category_id=category_id,
+                gender=gender,
+                category_name="Haircuts & Styling",
+                slug="haircuts-styling",
+                description=f"{gender.title()} haircut options.",
+                image_path=f"assets/images/{gender}-haircut.jpg",
+                image_alt=f"A stylist provides a {gender} haircut.",
+                is_active=True,
+            )
+            session.add(category)
+            session.flush()
+            for index in range(5):
+                session.add(
+                    ServiceType(
+                        category_id=category_id,
+                        service_name=f"{gender.title()} Cut {index + 1}",
+                        slug=f"{gender}-cut-{index + 1}",
+                        description=f"A distinct {gender} haircut option number {index + 1}.",
+                        image_path=category.image_path,
+                        image_alt=category.image_alt,
+                        verification_status="proposed",
+                        is_active=True,
+                    )
+                )
 
     for module in (database, main, academy, customers, enquiries, offers, services, staff):
         monkeypatch.setattr(module, "engine", test_engine)
@@ -183,6 +215,56 @@ def test_public_services_never_include_prices(client: TestClient) -> None:
     assert client.get("/services?category_id=-1").status_code == 422
     assert client.get("/services/9876").status_code == 404
     assert client.get("/services/-1").status_code == 422
+
+
+def test_service_catalog_is_gender_separated_and_enquiry_only(client: TestClient) -> None:
+    men_categories = client.get("/service-categories?gender=men")
+    women_categories = client.get("/service-categories?gender=women")
+
+    assert men_categories.status_code == women_categories.status_code == 200
+    assert [category["gender"] for category in men_categories.json()] == ["men"]
+    assert [category["gender"] for category in women_categories.json()] == ["women"]
+    assert men_categories.json()[0]["category_name"] == "Haircuts & Styling"
+    assert women_categories.json()[0]["category_name"] == "Haircuts & Styling"
+
+    for gender, categories in (
+        ("men", men_categories.json()),
+        ("women", women_categories.json()),
+    ):
+        category_id = categories[0]["category_id"]
+        service_types = client.get(
+            f"/service-categories/{category_id}/types"
+        )
+        assert service_types.status_code == 200
+        assert len(service_types.json()) == 5
+        assert all(item["gender"] == gender for item in service_types.json())
+        assert all(item["description"].strip() for item in service_types.json())
+        assert all(item["availability_status"] == "enquiry_only" for item in service_types.json())
+        assert all("price" not in item for item in service_types.json())
+
+        service_type = service_types.json()[0]
+        detail = client.get(f"/service-types/{service_type['service_type_id']}")
+        assert detail.status_code == 200
+        assert detail.json()["description"] == service_type["description"]
+
+    assert client.get("/service-categories?gender=other").status_code == 422
+    assert client.get("/service-categories").status_code == 422
+    assert client.get("/service-categories/999/types").status_code == 404
+    assert client.get("/service-types/999").status_code == 404
+    assert client.get("/service-types/-1").status_code == 422
+
+
+def test_proposed_catalogue_data_has_five_described_types_per_category() -> None:
+    assert set(SERVICE_CATALOG) == {"men", "women"}
+    all_descriptions = []
+    for categories in SERVICE_CATALOG.values():
+        for category in categories:
+            types = category["types"]
+            assert len(types) >= 5
+            assert all(name.strip() and description.strip() for name, description in types)
+            assert len({name for name, _ in types}) == len(types)
+            all_descriptions.extend(description for _, description in types)
+    assert len(set(all_descriptions)) == len(all_descriptions)
 
 
 def test_categories_include_an_empty_category_successfully(client: TestClient) -> None:

@@ -1,5 +1,8 @@
 (() => {
   const categoryServiceRequests = new Map();
+  const serviceTypeRequests = new Map();
+  let catalogTypeImageMap = null;
+  let catalogTypeImageMapRequest = null;
   const approvedServiceImages = new Map([
     [1, {
       categoryId: 1,
@@ -29,7 +32,7 @@
   const serviceNavigation = {
     men: {
       label: 'MEN SERVICES',
-      intro: "Browse men's service categories and see which treatments are listed in the current menu.",
+      intro: "Browse men's service categories and enquire about the individual options in each group.",
       groups: [
         {
           slug: 'haircuts-styling',
@@ -58,7 +61,7 @@
         {
           slug: 'hair-treatments',
           label: 'Hair Treatments',
-          description: 'Browse salon hair-care sessions and treatments listed in the menu.',
+          description: 'Browse salon hair-care options in the enquiry catalogue.',
           imageSrc: 'assets/images/men-hair-treatment.jpg',
           imageAlt: "A barber washes a male client's hair at a salon basin.",
           serviceNames: [],
@@ -66,7 +69,7 @@
         {
           slug: 'scalp-treatments',
           label: 'Scalp Treatments',
-          description: 'Find scalp-care sessions presented in the current service menu.',
+          description: 'Enquire about scalp-care sessions listed in this category.',
           imageSrc: 'assets/images/men-scalp-treatment.jpg',
           imageAlt: 'A man receives a shampoo and scalp wash at a salon.',
           serviceNames: [],
@@ -82,7 +85,7 @@
         {
           slug: 'head-massage-spa',
           label: 'Head Massage & Spa',
-          description: 'Browse head-massage and spa options listed in the current menu.',
+          description: 'Browse head-massage and spa options in the enquiry catalogue.',
           imageSrc: 'assets/images/men-head-massage.jpg',
           imageAlt: "A barber massages a male client's head in a barbershop.",
           serviceNames: [],
@@ -107,7 +110,7 @@
     },
     women: {
       label: 'WOMEN SERVICES',
-      intro: "Browse women's service categories and see which treatments are listed in the current menu.",
+      intro: "Browse women's service categories and enquire about the individual options in each group.",
       groups: [
         {
           slug: 'haircuts-styling',
@@ -136,7 +139,7 @@
         {
           slug: 'scalp-hair-spa',
           label: 'Scalp & Hair Spa',
-          description: 'Take a look at hair-washing and scalp-spa experiences available in the menu.',
+          description: 'Explore hair-washing and scalp-spa options listed for enquiry.',
           imageSrc: 'assets/images/women-scalp-hair-spa.jpg',
           imageAlt: "A stylist washes a woman's hair at a salon basin.",
           serviceNames: [],
@@ -152,7 +155,7 @@
         {
           slug: 'aesthetic-treatments',
           label: 'Aesthetic Treatments',
-          description: 'Review the aesthetic treatments listed in the current catalogue.',
+          description: 'Explore personal-care options in this category and discuss them with the salon team.',
           imageSrc: 'assets/images/women-aesthetic-treatment.jpg',
           imageAlt: 'A doctor performs a cosmetic skin treatment on a woman.',
           serviceNames: [],
@@ -209,8 +212,8 @@
           slug: 'hair-extensions',
           label: 'Hair Extensions',
           description: 'Ask the team about extension options and availability.',
-          imageSrc: null,
-          imageAlt: '',
+          imageSrc: 'assets/images/women-hair-extensions-category.jpg',
+          imageAlt: 'Hair extension strands and application tools arranged on a white surface.',
           serviceNames: [],
         },
       ],
@@ -345,10 +348,13 @@
     container.classList.remove('is-error', 'is-empty-state');
   }
 
-  async function getJson(path) {
+  async function getJson(path, options = {}) {
     let response;
     try {
-      response = await fetch(path, { headers: { Accept: 'application/json' } });
+      response = await fetch(path, {
+        ...options,
+        headers: { ...(options.headers || {}), Accept: 'application/json' },
+      });
     } catch (error) {
       console.error(`Service API request failed: ${path}`, error);
       throw new Error('The service catalog could not be reached.');
@@ -390,6 +396,78 @@
       && (value.image === null || typeof value.image === 'string');
   }
 
+  function isCatalogCategory(value) {
+    return value !== null
+      && typeof value === 'object'
+      && Number.isInteger(value.category_id)
+      && value.category_id > 0
+      && ['men', 'women'].includes(value.gender)
+      && typeof value.category_name === 'string'
+      && typeof value.slug === 'string'
+      && typeof value.description === 'string'
+      && (value.image_path === null || typeof value.image_path === 'string')
+      && typeof value.image_alt === 'string';
+  }
+
+  function isServiceType(value) {
+    return value !== null
+      && typeof value === 'object'
+      && Number.isInteger(value.service_type_id)
+      && value.service_type_id > 0
+      && Number.isInteger(value.category_id)
+      && value.category_id > 0
+      && ['men', 'women'].includes(value.gender)
+      && typeof value.category_name === 'string'
+      && typeof value.service_name === 'string'
+      && typeof value.description === 'string'
+      && (value.image_path === null || typeof value.image_path === 'string')
+      && typeof value.image_alt === 'string'
+      && value.availability_status === 'enquiry_only';
+  }
+
+  function getCatalogImageKey(gender, categoryName, serviceName) {
+    return `${gender}|${categoryName}|${serviceName}`;
+  }
+
+  function getCatalogTypeImageMap() {
+    if (!catalogTypeImageMapRequest) {
+      catalogTypeImageMapRequest = getJson('/assets/images/service-type-image-map.json', {
+        cache: 'no-store',
+      })
+        .then((entries) => {
+          if (!Array.isArray(entries) || !entries.every((entry) => (
+            entry !== null
+            && typeof entry === 'object'
+            && ['men', 'women'].includes(entry.gender)
+            && typeof entry.category === 'string'
+            && typeof entry.service === 'string'
+            && typeof entry.image === 'string'
+            && entry.image.startsWith('assets/images/')
+            && !entry.image.includes('..')
+            && typeof entry.alt === 'string'
+            && entry.alt.trim().length > 0
+          ))) {
+            throw new Error('The service image map is invalid.');
+          }
+
+          const imageMap = new Map(entries.map((entry) => [
+            getCatalogImageKey(entry.gender, entry.category, entry.service),
+            { src: entry.image, alt: entry.alt },
+          ]));
+          if (imageMap.size !== entries.length) {
+            throw new Error('The service image map contains duplicate service entries.');
+          }
+          catalogTypeImageMap = imageMap;
+          return imageMap;
+        })
+        .catch((error) => {
+          catalogTypeImageMapRequest = null;
+          throw error;
+        });
+    }
+    return catalogTypeImageMapRequest;
+  }
+
   async function getCategories() {
     const categories = await getJson('/categories');
     if (!Array.isArray(categories) || !categories.every(isCategory)) {
@@ -414,6 +492,36 @@
       categoryServiceRequests.set(categoryId, request);
     }
     return categoryServiceRequests.get(categoryId);
+  }
+
+  async function getServiceCategories(gender) {
+    const categories = await getJson(
+      `/service-categories?gender=${encodeURIComponent(gender)}`,
+    );
+    if (!Array.isArray(categories) || !categories.every(isCatalogCategory)) {
+      throw new Error('The service catalog returned invalid service categories.');
+    }
+    return categories;
+  }
+
+  function getServiceTypesForCategory(categoryId) {
+    if (!serviceTypeRequests.has(categoryId)) {
+      const request = getJson(
+        `/service-categories/${encodeURIComponent(categoryId)}/types`,
+      )
+        .then((types) => {
+          if (!Array.isArray(types) || !types.every(isServiceType)) {
+            throw new Error('The service catalog returned invalid service types.');
+          }
+          return types;
+        })
+        .catch((error) => {
+          serviceTypeRequests.delete(categoryId);
+          throw error;
+        });
+      serviceTypeRequests.set(categoryId, request);
+    }
+    return serviceTypeRequests.get(categoryId);
   }
 
   function createPendingImage(serviceName, message = 'Image pending approval') {
@@ -458,6 +566,53 @@
       return createApprovedImage(approvedImage, service.service_name);
     }
     return createPendingImage(service.service_name);
+  }
+
+  function createCatalogTypeImage(serviceType) {
+    const imageMapping = catalogTypeImageMap?.get(
+      getCatalogImageKey(
+        serviceType.gender,
+        serviceType.category_name,
+        serviceType.service_name,
+      ),
+    );
+    if (!imageMapping) {
+      console.warn(
+        `No verified photograph is mapped for ${serviceType.gender} ${serviceType.category_name}: ${serviceType.service_name}`,
+      );
+      return createPendingImage(serviceType.service_name, 'No suitable photo available');
+    }
+    return createApprovedImage(imageMapping, serviceType.service_name);
+  }
+
+  function createServiceTypeCard(serviceType) {
+    const card = document.createElement('article');
+    card.className = 'service-list-card';
+
+    const copy = document.createElement('div');
+    copy.className = 'service-list-copy';
+    const heading = document.createElement('h3');
+    heading.textContent = serviceType.service_name;
+    const description = document.createElement('p');
+    description.textContent = serviceType.description;
+
+    const actions = document.createElement('div');
+    actions.className = 'service-list-actions';
+    const bookLink = document.createElement('a');
+    bookLink.className = 'button';
+    bookLink.href = `contact.html?service=${encodeURIComponent(serviceType.service_name)}#booking`;
+    bookLink.textContent = 'Book';
+    bookLink.setAttribute('aria-label', `Enquire about ${serviceType.service_name}`);
+
+    const detailsLink = document.createElement('a');
+    detailsLink.className = 'button-secondary';
+    detailsLink.href = `service-detail.html?type=${encodeURIComponent(serviceType.service_type_id)}`;
+    detailsLink.textContent = 'View More';
+
+    actions.append(bookLink, detailsLink);
+    copy.append(heading, description, actions);
+    card.append(createCatalogTypeImage(serviceType), copy);
+    return card;
   }
 
   function createServiceCard(service) {
@@ -548,9 +703,9 @@
       return serviceNavigation[gender].groups.find((group) => group.slug === groupSlug) || null;
     }
 
-    function getCategoryRecord(gender) {
+    function getCategoryRecord(gender, groupSlug) {
       const matches = categories.filter(
-        (category) => category.category_name.trim().toLowerCase() === gender,
+        (category) => category.gender === gender && category.slug === groupSlug,
       );
       return matches.length === 1 ? matches[0] : null;
     }
@@ -707,7 +862,7 @@
         const explore = document.createElement('button');
         explore.type = 'button';
         explore.className = 'card-link';
-        explore.textContent = 'Explore';
+        explore.textContent = 'Explore More';
         const arrow = document.createElement('span');
         arrow.setAttribute('aria-hidden', 'true');
         arrow.textContent = '→';
@@ -759,13 +914,6 @@
       categoryIntro.hidden = true;
       serviceList.replaceChildren();
 
-      const category = getCategoryRecord(gender);
-      if (!category) {
-        resultsHeading.textContent = 'All Services';
-        showState(status, `No verified services are mapped to ${gender} in the current database.`);
-        return;
-      }
-
       if (categorySlug === 'all') {
         if (groupSlug === 'all') {
           if (state.notice) {
@@ -785,23 +933,26 @@
         showState(status, 'This service category is unavailable.');
         return;
       }
+      const category = getCategoryRecord(gender, groupSlug);
+      if (!category) {
+        resultsHeading.textContent = group.label;
+        showState(status, `The ${group.label} catalogue is unavailable. Please try again.`);
+        return;
+      }
       resultsHeading.textContent = group.label;
       categoryIntro.append(renderCategoryIntro(group));
       categoryIntro.hidden = false;
       showState(status, `Loading ${gender} services…`);
       try {
-        const services = await getServicesForCategory(category.category_id);
+        const services = await getServiceTypesForCategory(category.category_id);
         if (currentRequest !== requestVersion) return;
-        const serviceNames = new Set(
-          group.serviceNames.map((name) => name.trim().toLowerCase()),
+        const matchingServices = services.filter(
+          (service) => service.gender === gender,
         );
-        const matchingServices = services.filter((service) => (
-          serviceNames.has(service.service_name.trim().toLowerCase())
-        ));
 
         if (state.notice) {
           showState(status, state.notice, {
-            detail: 'Use the categories on the left to browse everything currently on the menu.',
+            detail: 'Use the categories on the left to browse the enquiry catalogue.',
             action: {
               label: 'Show all services',
               onClick: () => selectCategory(state.gender, 'all', 'all'),
@@ -810,18 +961,26 @@
         } else if (matchingServices.length === 0) {
           showState(
             status,
-            `No ${group.label} services are listed yet.`,
+            `No ${group.label} options are listed yet.`,
             {
-              detail: 'This part of the menu is still being prepared. Browse all services or speak with our team about what is available now.',
+              detail: 'Please contact our team to ask about options for this category.',
               action: {
-                label: 'View all services',
+                label: 'Browse all categories',
                 onClick: () => selectCategory(state.gender, 'all', 'all'),
               },
             },
           );
-        } else clearState(status);
+        } else {
+          clearState(status);
+          const enquiryNotice = document.createElement('p');
+          enquiryNotice.className = 'service-category-overview';
+          enquiryNotice.textContent = 'Listed options are for enquiry; our team will confirm availability.';
+          serviceList.append(enquiryNotice);
+        }
 
-        matchingServices.forEach((service) => serviceList.append(createServiceCard(service)));
+        matchingServices.forEach(
+          (service) => serviceList.append(createServiceTypeCard(service)),
+        );
       } catch {
         if (currentRequest !== requestVersion) return;
         showState(status, `Could not load ${gender} services. Please try again.`, {
@@ -863,7 +1022,12 @@
       root.setAttribute('aria-busy', 'true');
       showState(status, 'Loading service categories…');
       try {
-        categories = await getCategories();
+        catalogTypeImageMap = await getCatalogTypeImageMap();
+        const catalogCategories = await Promise.all([
+          getServiceCategories('men'),
+          getServiceCategories('women'),
+        ]);
+        categories = catalogCategories.flat();
         catalogLoaded = true;
         restoreFromUrl();
         writeUrl(true);
@@ -959,7 +1123,9 @@
     const unavailable = document.getElementById('service-detail-unavailable');
     const unavailableMessage = document.getElementById('service-detail-unavailable-message');
     const retry = document.getElementById('service-detail-retry');
-    const serviceId = new URLSearchParams(window.location.search).get('service');
+    const params = new URLSearchParams(window.location.search);
+    const serviceTypeId = params.get('type');
+    const serviceId = params.get('service');
 
     async function loadDetail() {
       loading.hidden = false;
@@ -967,7 +1133,9 @@
       unavailable.hidden = true;
       retry.hidden = true;
 
-      if (!serviceId || !/^[1-9]\d*$/.test(serviceId)) {
+      const isServiceTypeRequest = serviceTypeId !== null;
+      const requestedId = serviceTypeId || serviceId;
+      if (!requestedId || !/^[1-9]\d*$/.test(requestedId)) {
         loading.hidden = true;
         unavailableMessage.textContent = 'Choose a service from the collection to see its details, or contact our team for help.';
         unavailable.hidden = false;
@@ -975,8 +1143,21 @@
       }
 
       try {
-        const service = await getJson(`/services/${encodeURIComponent(serviceId)}`);
-        if (!isService(service)) throw new Error('The service catalog returned invalid service details.');
+        if (isServiceTypeRequest) {
+          catalogTypeImageMap = await getCatalogTypeImageMap();
+        }
+        const service = await getJson(
+          isServiceTypeRequest
+            ? `/service-types/${encodeURIComponent(requestedId)}`
+            : `/services/${encodeURIComponent(requestedId)}`,
+        );
+        if (
+          isServiceTypeRequest
+            ? !isServiceType(service)
+            : !isService(service)
+        ) {
+          throw new Error('The service catalog returned invalid service details.');
+        }
 
         const name = service.service_name;
         document.title = `${name} | EVolve Salon`;
@@ -989,8 +1170,11 @@
         const enquiryUrl = `contact.html?service=${encodeURIComponent(name)}#booking`;
         document.getElementById('service-detail-book').href = enquiryUrl;
         document.getElementById('service-detail-enquire').href = enquiryUrl;
-        document.getElementById('service-detail-image-container')
-          .replaceChildren(createServiceImage(service));
+        document.getElementById('service-detail-image-container').replaceChildren(
+          isServiceTypeRequest
+            ? createCatalogTypeImage(service)
+            : createServiceImage(service),
+        );
         root.hidden = false;
         loading.hidden = true;
       } catch (error) {

@@ -1,6 +1,7 @@
 import re
 from datetime import date
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import (
     BaseModel,
@@ -39,6 +40,28 @@ class ServicePublic(APIModel):
     category_id: int | None
     category_name: str | None
     image: str | None
+
+
+class ServiceCategoryCatalogPublic(APIModel):
+    category_id: int
+    gender: Literal["men", "women"]
+    category_name: str
+    slug: str
+    description: str
+    image_path: str | None
+    image_alt: str
+
+
+class ServiceTypePublic(APIModel):
+    service_type_id: int
+    category_id: int
+    category_name: str
+    gender: Literal["men", "women"]
+    service_name: str
+    description: str
+    image_path: str | None
+    image_alt: str
+    availability_status: Literal["enquiry_only"]
 
 
 class CustomerCreate(APIModel):

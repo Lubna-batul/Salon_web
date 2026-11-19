@@ -1,0 +1,702 @@
+[
+  {
+    "gender": "men",
+    "category": "Haircuts & Styling",
+    "service": "Classic Haircut",
+    "image": "assets/images/men-haircut.jpg",
+    "alt": "A barber trims a man's hair into a classic cut."
+  },
+  {
+    "gender": "men",
+    "category": "Haircuts & Styling",
+    "service": "Fade Haircut",
+    "image": "assets/images/men-fade-haircut.jpg",
+    "alt": "A man with a fresh fade haircut viewed from behind."
+  },
+  {
+    "gender": "men",
+    "category": "Haircuts & Styling",
+    "service": "Textured Crop",
+    "image": "assets/images/men-textured-crop.jpg",
+    "alt": "A man with short, textured curls and faded sides, photographed during a barbershop cut."
+  },
+  {
+    "gender": "men",
+    "category": "Beard & Grooming",
+    "service": "Beard Trim",
+    "image": "assets/images/men-beard-trim.jpg",
+    "alt": "A barber trims a man's beard with clippers."
+  },
+  {
+    "gender": "men",
+    "category": "Beard & Grooming",
+    "service": "Beard Shape-Up",
+    "image": "assets/images/men-beard-shape-up.jpg",
+    "alt": "A barber uses a straight razor to define a man's beard line."
+  },
+  {
+    "gender": "men",
+    "category": "Beard & Grooming",
+    "service": "Beard Styling",
+    "image": "assets/images/men-beard-styling.jpg",
+    "alt": "A barber shapes a man's beard with scissors."
+  },
+  {
+    "gender": "men",
+    "category": "Beard & Grooming",
+    "service": "Clean Shave",
+    "image": "assets/images/men-occasion-grooming.jpg",
+    "alt": "A barber applies shaving cream during a men's shave."
+  },
+  {
+    "gender": "men",
+    "category": "Beard & Grooming",
+    "service": "Moustache Grooming",
+    "image": "assets/images/men-beard-grooming.jpg",
+    "alt": "A barber grooms a man's moustache."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Treatments",
+    "service": "Hair Spa",
+    "image": "assets/images/men-hair-treatment.jpg",
+    "alt": "A barber shampoos a male client's hair at a salon basin."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Treatments",
+    "service": "Deep Conditioning",
+    "image": "assets/images/men-deep-conditioning.jpg",
+    "alt": "A man receives a hair rinse at a salon basin."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Treatments",
+    "service": "Smoothening",
+    "image": "assets/images/men-hair-smoothening.jpg",
+    "alt": "A barber blow-dries and styles a man's hair."
+  },
+  {
+    "gender": "men",
+    "category": "Scalp Treatments",
+    "service": "Scalp Cleansing",
+    "image": "assets/images/men-scalp-treatment.jpg",
+    "alt": "A man receives a shampoo and scalp wash at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Skincare & Facials",
+    "service": "Classic Facial",
+    "image": "assets/images/men-facial-treatment.jpg",
+    "alt": "A barber applies a facial mask to a man."
+  },
+  {
+    "gender": "men",
+    "category": "Skincare & Facials",
+    "service": "Deep Cleansing Facial",
+    "image": "assets/images/men-deep-cleansing-facial.jpg",
+    "alt": "A man applies a facial cleanser as part of his skincare routine."
+  },
+  {
+    "gender": "men",
+    "category": "Skincare & Facials",
+    "service": "De-Tan Facial",
+    "image": "assets/images/men-de-tan-facial.jpg",
+    "alt": "A man receives a relaxing facial massage at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Skincare & Facials",
+    "service": "Express Facial",
+    "image": "assets/images/men-express-facial.jpg",
+    "alt": "A man receives a facial massage at a spa."
+  },
+  {
+    "gender": "men",
+    "category": "Head Massage & Spa",
+    "service": "Relaxing Head Massage",
+    "image": "assets/images/men-head-massage.jpg",
+    "alt": "A barber massages a male client's head in a barbershop."
+  },
+  {
+    "gender": "men",
+    "category": "Head Massage & Spa",
+    "service": "Scalp Massage",
+    "image": "assets/images/men-scalp-massage.jpg",
+    "alt": "A stylist massages a man's scalp at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Head Massage & Spa",
+    "service": "Hair Spa Massage",
+    "image": "assets/images/men-hair-spa-massage.jpg",
+    "alt": "A man receives a hair wash and scalp massage at a salon basin."
+  },
+  {
+    "gender": "men",
+    "category": "Manicure & Pedicure",
+    "service": "Classic Manicure",
+    "image": "assets/images/men-manicure.jpg",
+    "alt": "A man receives a manicure at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Manicure & Pedicure",
+    "service": "Express Manicure",
+    "image": "assets/images/men-express-manicure.jpg",
+    "alt": "A nail technician gives a man a manicure."
+  },
+  {
+    "gender": "men",
+    "category": "Manicure & Pedicure",
+    "service": "Nail Care",
+    "image": "assets/images/men-nail-care.jpg",
+    "alt": "A technician cares for a client's fingernails during a manicure."
+  },
+  {
+    "gender": "men",
+    "category": "Occasion Grooming",
+    "service": "Event Grooming",
+    "image": "assets/images/men-event-grooming.jpg",
+    "alt": "A barber trims a man's beard in a barbershop."
+  },
+  {
+    "gender": "men",
+    "category": "Occasion Grooming",
+    "service": "Wedding Grooming",
+    "image": "assets/images/men-wedding-grooming.jpg",
+    "alt": "A man in a formal suit sits in a barbershop chair."
+  },
+  {
+    "gender": "men",
+    "category": "Occasion Grooming",
+    "service": "Party Grooming",
+    "image": "assets/images/men-party-grooming.jpg",
+    "alt": "A barber prepares a client for a fresh haircut."
+  },
+  {
+    "gender": "men",
+    "category": "Occasion Grooming",
+    "service": "Formal Styling",
+    "image": "assets/images/men-formal-styling.jpg",
+    "alt": "A barber styles a man's hair in a professional shop."
+  },
+  {
+    "gender": "men",
+    "category": "Occasion Grooming",
+    "service": "Special Occasion Styling",
+    "image": "assets/images/men-special-occasion-styling.jpg",
+    "alt": "A barber adds finishing touches to a man's hairstyle."
+  },
+  {
+    "gender": "women",
+    "category": "Haircuts & Styling",
+    "service": "Layer Cut",
+    "image": "assets/images/women-layer-cut.jpg",
+    "alt": "A woman with long layered hair sits in a hair salon."
+  },
+  {
+    "gender": "women",
+    "category": "Haircuts & Styling",
+    "service": "Bob Cut",
+    "image": "assets/images/women-bob-cut.jpg",
+    "alt": "A woman with a short bob haircut poses for a portrait."
+  },
+  {
+    "gender": "women",
+    "category": "Haircuts & Styling",
+    "service": "Wolf Cut",
+    "image": "assets/images/women-wolf-cut.jpg",
+    "alt": "A woman with shaggy, layered brunette hair and a fringe."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Colour & Highlights",
+    "service": "Global Hair Colour",
+    "image": "assets/images/women-global-hair-colour.jpg",
+    "alt": "A woman with glossy dark brown hair photographed in a salon."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Colour & Highlights",
+    "service": "Highlights",
+    "image": "assets/images/women-hair-highlights.jpg",
+    "alt": "A woman's brunette hair shows lighter highlights."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Colour & Highlights",
+    "service": "Root Touch-Up",
+    "image": "assets/images/women-root-touch-up.jpg",
+    "alt": "A stylist applies hair colour at a woman's roots."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Treatments",
+    "service": "Hair Spa",
+    "image": "assets/images/women-hair-spa.jpg",
+    "alt": "A stylist washes a woman's hair at a salon basin."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Treatments",
+    "service": "Keratin Treatment",
+    "image": "assets/images/women-keratin-treatment.jpg",
+    "alt": "A stylist uses a flat iron while working on a woman's hair."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Treatments",
+    "service": "Deep Conditioning",
+    "image": "assets/images/women-hair-treatment.jpg",
+    "alt": "A woman receives a salon hair treatment under a hooded steamer."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Treatments",
+    "service": "Hair Repair Treatment",
+    "image": "assets/images/women-hair-repair.jpg",
+    "alt": "Close-up of wet brunette hair during a salon treatment."
+  },
+  {
+    "gender": "women",
+    "category": "Scalp & Hair Spa",
+    "service": "Relaxing Head Massage",
+    "image": "assets/images/women-relaxing-head-massage.jpg",
+    "alt": "A stylist massages a woman's scalp at a salon basin."
+  },
+  {
+    "gender": "women",
+    "category": "Scalp & Hair Spa",
+    "service": "Scalp Cleansing",
+    "image": "assets/images/women-scalp-hair-spa.jpg",
+    "alt": "A stylist washes a woman's hair at a salon basin."
+  },
+  {
+    "gender": "women",
+    "category": "Scalp & Hair Spa",
+    "service": "Nourishing Scalp Treatment",
+    "image": "assets/images/women-nourishing-scalp-treatment.jpg",
+    "alt": "A dropper applies serum along a woman's scalp."
+  },
+  {
+    "gender": "women",
+    "category": "Scalp & Hair Spa",
+    "service": "Hair Spa Massage",
+    "image": "assets/images/women-hair-spa-massage.jpg",
+    "alt": "A stylist massages a woman's scalp while washing her hair."
+  },
+  {
+    "gender": "women",
+    "category": "Scalp & Hair Spa",
+    "service": "Scalp Detox",
+    "image": "assets/images/women-scalp-detox.jpg",
+    "alt": "A stylist washes a woman's hair at a salon basin."
+  },
+  {
+    "gender": "women",
+    "category": "Skin Care & Facials",
+    "service": "Classic Facial",
+    "image": "assets/images/facial-treatment.jpg",
+    "alt": "A woman receives a facial treatment with a mask applied by a skincare professional."
+  },
+  {
+    "gender": "women",
+    "category": "Skin Care & Facials",
+    "service": "Deep Cleansing Facial",
+    "image": "assets/images/women-deep-cleansing-facial.jpg",
+    "alt": "A woman receives a spa facial with a dark mask."
+  },
+  {
+    "gender": "women",
+    "category": "Skin Care & Facials",
+    "service": "Hydrating Facial",
+    "image": "assets/images/women-hydrating-facial.jpg",
+    "alt": "A woman relaxes with a moisturizing sheet mask."
+  },
+  {
+    "gender": "women",
+    "category": "Skin Care & Facials",
+    "service": "De-Tan Facial",
+    "image": "assets/images/women-de-tan-facial.jpg",
+    "alt": "A skincare professional applies a facial mask at a spa."
+  },
+  {
+    "gender": "women",
+    "category": "Skin Care & Facials",
+    "service": "Brightening Facial",
+    "image": "assets/images/women-brightening-facial.jpg",
+    "alt": "A skincare professional applies a facial treatment with a brush."
+  },
+  {
+    "gender": "women",
+    "category": "Aesthetic Treatments",
+    "service": "Skin Consultation",
+    "image": "assets/images/skin-consultation.png",
+    "alt": "A client and skincare professional discuss a skin assessment using a tablet."
+  },
+  {
+    "gender": "women",
+    "category": "Aesthetic Treatments",
+    "service": "Skin Rejuvenation",
+    "image": "assets/images/skin-rejuvenation.png",
+    "alt": "A split portrait shows a woman with refreshed-looking facial skin."
+  },
+  {
+    "gender": "women",
+    "category": "Aesthetic Treatments",
+    "service": "Hydration Treatment",
+    "image": "assets/images/women-hydration-treatment.jpg",
+    "alt": "A woman relaxes with a facial sheet mask as part of a hydration-focused skincare routine."
+  },
+  {
+    "gender": "women",
+    "category": "Aesthetic Treatments",
+    "service": "Exfoliation Treatment",
+    "image": "assets/images/exfoliation-treatment.png",
+    "alt": "A skincare professional applies a gentle exfoliating product to a client's face."
+  },
+  {
+    "gender": "women",
+    "category": "Aesthetic Treatments",
+    "service": "Skin Care Session",
+    "image": "assets/images/women-skin-care-session.jpg",
+    "alt": "A skincare specialist attends to a client during a facial session."
+  },
+  {
+    "gender": "women",
+    "category": "Waxing & Threading",
+    "service": "Eyebrow Threading",
+    "image": "assets/images/women-eyebrow-threading.jpg",
+    "alt": "A beauty professional threads a woman's eyebrows."
+  },
+  {
+    "gender": "women",
+    "category": "Waxing & Threading",
+    "service": "Full Legs Waxing",
+    "image": "assets/images/women-waxing.jpg",
+    "alt": "A beauty professional performs a waxing treatment on a woman's leg."
+  },
+  {
+    "gender": "women",
+    "category": "Manicure & Pedicure",
+    "service": "Classic Manicure",
+    "image": "assets/images/women-manicure-pedicure.jpg",
+    "alt": "A woman receives a manicure from a nail technician."
+  },
+  {
+    "gender": "women",
+    "category": "Manicure & Pedicure",
+    "service": "Classic Pedicure",
+    "image": "assets/images/women-classic-pedicure.jpg",
+    "alt": "A nail technician performs a classic pedicure."
+  },
+  {
+    "gender": "women",
+    "category": "Manicure & Pedicure",
+    "service": "Gel Manicure",
+    "image": "assets/images/women-gel-manicure.jpg",
+    "alt": "A nail technician applies gel polish during a manicure."
+  },
+  {
+    "gender": "women",
+    "category": "Manicure & Pedicure",
+    "service": "Spa Pedicure",
+    "image": "assets/images/women-spa-pedicure.jpg",
+    "alt": "A client enjoys foot care during a spa pedicure."
+  },
+  {
+    "gender": "women",
+    "category": "Manicure & Pedicure",
+    "service": "Nail Care",
+    "image": "assets/images/women-nail-care.jpg",
+    "alt": "A nail technician files and shapes a client's nails."
+  },
+  {
+    "gender": "women",
+    "category": "Nail Art",
+    "service": "Minimal Nail Art",
+    "image": "assets/images/women-minimal-nail-art.jpg",
+    "alt": "A close-up of understated nail art in soft pink with fine dark accents."
+  },
+  {
+    "gender": "women",
+    "category": "Nail Art",
+    "service": "French Nail Art",
+    "image": "assets/images/women-french-nail-art.jpg",
+    "alt": "A close-up of a manicure with classic French tips."
+  },
+  {
+    "gender": "women",
+    "category": "Nail Art",
+    "service": "Floral Nail Art",
+    "image": "assets/images/women-floral-nail-art.jpg",
+    "alt": "A close-up of nails decorated with delicate floral designs."
+  },
+  {
+    "gender": "women",
+    "category": "Nail Art",
+    "service": "Glitter Nail Art",
+    "image": "assets/images/women-glitter-nail-art.jpg",
+    "alt": "A close-up of pink nails with a glitter design."
+  },
+  {
+    "gender": "women",
+    "category": "Nail Art",
+    "service": "Bridal Nail Art",
+    "image": "assets/images/women-bridal-nail-art.jpg",
+    "alt": "A bride displays a manicure with wedding rings and flowers."
+  },
+  {
+    "gender": "women",
+    "category": "Makeup",
+    "service": "Bridal Makeup",
+    "image": "assets/images/women-bridal-makeup.jpg",
+    "alt": "A makeup artist applies makeup to a bride."
+  },
+  {
+    "gender": "women",
+    "category": "Makeup",
+    "service": "Party Makeup",
+    "image": "assets/images/women-party-makeup.jpg",
+    "alt": "A makeup artist applies eyeshadow to a client."
+  },
+  {
+    "gender": "women",
+    "category": "Makeup",
+    "service": "Glam Makeup",
+    "image": "assets/images/women-glam-makeup.jpg",
+    "alt": "A makeup artist applies cosmetics for a polished look."
+  },
+  {
+    "gender": "women",
+    "category": "Makeup",
+    "service": "Engagement Makeup",
+    "image": "assets/images/women-engagement-makeup.jpg",
+    "alt": "A makeup artist works on a woman in a studio setting."
+  },
+  {
+    "gender": "women",
+    "category": "Makeup",
+    "service": "Reception Makeup",
+    "image": "assets/images/women-reception-makeup.jpg",
+    "alt": "A bride wears a finished makeup look for a wedding celebration."
+  },
+  {
+    "gender": "women",
+    "category": "Bridal & Occasion",
+    "service": "Bridal Styling",
+    "image": "assets/images/women-bridal-styling.jpg",
+    "alt": "A stylist adjusts a bride's updo in a bright room."
+  },
+  {
+    "gender": "women",
+    "category": "Bridal & Occasion",
+    "service": "Engagement Styling",
+    "image": "assets/images/women-engagement-styling.jpg",
+    "alt": "A woman shows a finished curly hairstyle from behind."
+  },
+  {
+    "gender": "women",
+    "category": "Bridal & Occasion",
+    "service": "Reception Styling",
+    "image": "assets/images/women-reception-styling.jpg",
+    "alt": "A stylist works on a bride's hair before a celebration."
+  },
+  {
+    "gender": "women",
+    "category": "Bridal & Occasion",
+    "service": "Party Styling",
+    "image": "assets/images/women-party-styling.jpg",
+    "alt": "A stylist arranges an elegant updo with decorative pins."
+  },
+  {
+    "gender": "women",
+    "category": "Bridal & Occasion",
+    "service": "Special Occasion Styling",
+    "image": "assets/images/women-special-occasion-styling.jpg",
+    "alt": "A hairstylist adjusts an embellished updo."
+  },
+  {
+    "gender": "women",
+    "category": "Body Spa & Massage",
+    "service": "Relaxing Body Massage",
+    "image": "assets/images/women-relaxing-body-massage.jpg",
+    "alt": "A woman receives a relaxing massage at a spa."
+  },
+  {
+    "gender": "women",
+    "category": "Body Spa & Massage",
+    "service": "Back Massage",
+    "image": "assets/images/women-body-massage.jpg",
+    "alt": "A therapist gives a woman a back massage at a spa."
+  },
+  {
+    "gender": "women",
+    "category": "Body Spa & Massage",
+    "service": "Foot Massage",
+    "image": "assets/images/women-foot-massage.jpg",
+    "alt": "A therapist massages a client's feet at a spa."
+  },
+  {
+    "gender": "women",
+    "category": "Body Spa & Massage",
+    "service": "Body Spa",
+    "image": "assets/images/women-body-spa.jpg",
+    "alt": "A client receives an oil massage during a spa session."
+  },
+  {
+    "gender": "women",
+    "category": "Body Spa & Massage",
+    "service": "Aromatherapy Massage",
+    "image": "assets/images/women-aromatherapy-massage.jpg",
+    "alt": "A therapist gives a woman a massage in an aromatherapy spa setting."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Extensions",
+    "service": "Clip-In Extensions",
+    "image": "assets/images/clip-in-extensions.jpg",
+    "alt": "A clip-in extension weft is held against a woman's sectioned hair."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Extensions",
+    "service": "Tape-In Extensions",
+    "image": "assets/images/tape-in-extensions.jpg",
+    "alt": "A tape-in hair extension is positioned at a parting in dark hair."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Extensions",
+    "service": "Volume Extensions",
+    "image": "assets/images/volume-extensions.jpg",
+    "alt": "A woman has extension wefts placed beneath sections of her hair."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Extensions",
+    "service": "Length Extensions",
+    "image": "assets/images/length-extensions.jpg",
+    "alt": "Long brunette hair is shown before and after extension styling."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Extensions",
+    "service": "Extension Maintenance",
+    "image": "assets/images/extension-maintenance.jpg",
+    "alt": "A stylist adjusts long blonde hair extensions on a client in a salon."
+  },
+  {
+    "gender": "women",
+    "category": "Waxing & Threading",
+    "service": "Upper Lip Threading",
+    "image": "assets/images/upper-lip-threading.jpg",
+    "alt": "Threading is performed across a woman's upper lip."
+  },
+  {
+    "gender": "women",
+    "category": "Waxing & Threading",
+    "service": "Full Face Threading",
+    "image": "assets/images/full-face-threading.jpg",
+    "alt": "A beauty professional threads a woman's face."
+  },
+  {
+    "gender": "women",
+    "category": "Waxing & Threading",
+    "service": "Full Arms Waxing",
+    "image": "assets/images/full-arms-waxing.jpg",
+    "alt": "A close-up of arms showing a smooth hair-removal result."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Colour & Highlights",
+    "service": "Balayage",
+    "image": "assets/images/balayage.png",
+    "alt": "A brunette hairstyle with softly blended caramel highlights through the lengths."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Colour & Highlights",
+    "service": "Ombre",
+    "image": "assets/images/ombre.png",
+    "alt": "Long brunette hair with a gradual transition to warm caramel ends."
+  },
+  {
+    "gender": "women",
+    "category": "Hair Treatments",
+    "service": "Smoothening",
+    "image": "assets/images/smoothening.png",
+    "alt": "Side-by-side view of textured and sleek straight brown hair."
+  },
+  {
+    "gender": "women",
+    "category": "Haircuts & Styling",
+    "service": "U-Cut",
+    "image": "assets/images/u-shape-cut.png",
+    "alt": "Long, straight brunette hair with a softly curved U-shaped hemline, viewed from behind."
+  },
+  {
+    "gender": "women",
+    "category": "Haircuts & Styling",
+    "service": "Butterfly Cut",
+    "image": "assets/images/butterfly-cut.png",
+    "alt": "A woman wears a voluminous, layered butterfly haircut with face-framing pieces."
+  },
+  {
+    "gender": "men",
+    "category": "Haircuts & Styling",
+    "service": "Crew Cut",
+    "image": "assets/images/crew-cut.png",
+    "alt": "A man with a neat, close-cropped crew cut and short sides."
+  },
+  {
+    "gender": "men",
+    "category": "Haircuts & Styling",
+    "service": "Wolf Cut",
+    "image": "assets/images/wolf-cut.png",
+    "alt": "A man with a layered, textured wolf cut and longer hair at the back."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Colour",
+    "service": "Global Hair Colour",
+    "image": "assets/images/global-hair-colour.png",
+    "alt": "A man with an even, rich brown hair colour in a portrait."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Colour",
+    "service": "Grey Coverage",
+    "image": "assets/images/grey-coverage.png",
+    "alt": "Before-and-after views show grey hair refreshed with an even, darker colour."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Colour",
+    "service": "Highlights",
+    "image": "assets/images/highlights.png",
+    "alt": "A man with visibly lighter highlights through textured dark hair."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Colour",
+    "service": "Root Touch-Up",
+    "image": "assets/images/root-touch-up.png",
+    "alt": "A stylist applies colour to the roots of a man's hair."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Colour",
+    "service": "Fashion Colour",
+    "image": "assets/images/fashion-colour.png",
+    "alt": "A man with a bold red fashion colour through textured hair."
+  },
+  {
+    "gender": "men",
+    "category": "Hair Treatments",
+    "service": "Keratin Treatment",
+    "image": "assets/images/keratin-treatment.png",
+    "alt": "Before-and-after views show curly hair styled into a smooth, straight finish."
+  }
+]

@@ -1,7 +1,9 @@
 # Evolve Studio API
 
-The API uses the existing MySQL `salon_marketing` database. It does not create,
-alter, or seed database objects. Public service data intentionally omits prices.
+The API uses the existing MySQL `salon_marketing` database. Public service data
+intentionally omits prices. The optional service catalogue uses two separate,
+additive tables and lists proposed services as enquiry-only until the salon
+confirms them.
 Swagger documentation is available at `/docs` while the application is running.
 
 ## Setup
@@ -18,7 +20,21 @@ Swagger documentation is available at `/docs` while the application is running.
    for the provided MySQL server. `backend\.env.example` shows the setting names.
    The project `.gitignore` already excludes `.env`.
 
-3. Start the API and frontend together from the project root:
+3. Before starting the API, add or refresh the enquiry catalogue from the
+   project root:
+
+   ```powershell
+   .\.venv\Scripts\python.exe -m backend.migrations.add_service_catalog
+   ```
+
+   It creates only missing `service_categories` and `service_types` tables, then
+   inserts catalogue rows only when their gender/category/type key is absent.
+   Existing categories, services, IDs, and relationships are not altered or
+   deleted. New entries remain marked `proposed` internally and are exposed as
+   `enquiry_only`; enquiries do not confirm salon availability. Review the
+   catalogue with the salon before representing any option as confirmed.
+
+4. Start the API and frontend together from the project root:
 
    ```powershell
    .\.venv\Scripts\python.exe -m uvicorn backend.main:app --reload
@@ -42,6 +58,9 @@ Swagger documentation is available at `/docs` while the application is running.
 | GET | `/categories/{category_id}/services` | List a category's services |
 | GET | `/services` | List services; accepts optional `category_id` |
 | GET | `/services/{service_id}` | Get one service |
+| GET | `/service-categories` | List active catalogue categories; requires `gender=men` or `gender=women` |
+| GET | `/service-categories/{category_id}/types` | List active service types for a catalogue category |
+| GET | `/service-types/{service_type_id}` | Get one active catalogue type |
 | POST | `/customers` | Register a customer; duplicate email returns `409` |
 | POST | `/contact-enquiries` | Store a contact enquiry |
 | GET | `/academy/courses` | List active courses |
@@ -64,6 +83,8 @@ The public API uses `categories`, `services`, `academy_courses`, `offers`, and
 limited public fields from `staff` for read-only catalog data. It writes customer
 registrations to `customers` and submissions to `contact_enquiries` and
 `course_enquiries`.
+The optional enquiry catalogue is separate from the legacy `categories` and
+`services` tables so existing IDs and API relationships are preserved.
 
 The remaining four tables are intentionally not exposed publicly:
 `appointments` and `appointment_details` require the deferred identity and
@@ -74,10 +95,11 @@ records.
 
 ## Catalog image status
 
-The current service rows have no database image values. Service cards and
-category cards use an explicit pending-image state until each image is verified
-and approved. No external or local image paths are assigned as service images,
-and no database image records are changed by this project.
+The legacy `services` rows have no database image values and remain unchanged.
+The new catalogue entries reference relevant local, gender-specific category
+photos from `frontend/assets/images/`; Hair Extensions use a pending-image state
+because no suitable photo is available. These images represent a service
+category, not guaranteed results or confirmation that the service is offered.
 
 ## Tests
 

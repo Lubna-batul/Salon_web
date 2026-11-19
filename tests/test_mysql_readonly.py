@@ -27,6 +27,32 @@ def test_public_endpoints_against_mysql_without_writes() -> None:
             assert response.status_code == 200
             assert isinstance(response.json(), list)
 
+        for gender in ("men", "women"):
+            service_categories = client.get(
+                "/service-categories",
+                params={"gender": gender},
+            )
+            assert service_categories.status_code == 200
+            assert service_categories.json()
+            assert all(
+                category["gender"] == gender
+                for category in service_categories.json()
+            )
+            for category in service_categories.json():
+                service_types = client.get(
+                    f"/service-categories/{category['category_id']}/types"
+                )
+                assert service_types.status_code == 200
+                assert len(service_types.json()) >= 5
+                for service_type in service_types.json():
+                    assert service_type["description"].strip()
+                    assert service_type["availability_status"] == "enquiry_only"
+                    detail = client.get(
+                        f"/service-types/{service_type['service_type_id']}"
+                    )
+                    assert detail.status_code == 200
+                    assert detail.json()["description"] == service_type["description"]
+
         if categories.json():
             category_id = categories.json()[0]["category_id"]
             assert client.get(f"/categories/{category_id}").status_code == 200
