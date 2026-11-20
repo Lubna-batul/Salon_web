@@ -312,3 +312,23 @@ SERVICE_CATALOG = {
         },
     ],
 }
+
+
+FOUR_MEN_SERVICE_IMAGES = {
+    ("men", "Head Massage & Spa", "Head and Shoulder Massage"): {
+        "image_path": "assets/images/men-head-shoulder-massage.png",
+        "image_alt": "A massage therapist performs a relaxing shoulder and upper-back massage on a man.",
+    },
+    ("men", "Head Massage & Spa", "Oil Head Massage"): {
+        "image_path": "assets/images/men-oil-head-massage.png",
+        "image_alt": "A spa therapist gives a man a relaxing head and face massage.",
+    },
+    ("men", "Manicure & Pedicure", "Classic Pedicure"): {
+        "image_path": "assets/images/men-classic-pedicure.png",
+        "image_alt": "A nail technician provides a man with a foot and nail care pedicure.",
+    },
+    ("men", "Manicure & Pedicure", "Express Pedicure"): {
+        "image_path": "assets/images/men-express-pedicure.png",
+        "image_alt": "A close-up of neatly groomed male feet receiving a short nail and foot tidy.",
+    },
+}

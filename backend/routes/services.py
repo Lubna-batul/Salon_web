@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.database import engine
+from backend.catalog_data import FOUR_MEN_SERVICE_IMAGES
 from backend.models import ServiceCategory, ServiceType
 from backend.schemas import (
     CategoryPublic,
@@ -13,6 +14,23 @@ from backend.schemas import (
 )
 
 router = APIRouter(tags=["services"])
+
+
+def apply_four_service_image_mapping(row: dict) -> dict:
+    mapping = FOUR_MEN_SERVICE_IMAGES.get(
+        (
+            row["gender"],
+            row["category_name"],
+            row["service_name"],
+        )
+    )
+    if mapping is not None:
+        return {
+            **dict(row),
+            "image_path": mapping["image_path"],
+            "image_alt": mapping["image_alt"],
+        }
+    return dict(row)
 
 
 @router.get(
@@ -76,7 +94,10 @@ def get_service_types_for_category(
             .order_by(ServiceType.service_type_id)
         ).mappings().all()
     return [
-        {**dict(row), "availability_status": "enquiry_only"}
+        {
+            **apply_four_service_image_mapping(dict(row)),
+            "availability_status": "enquiry_only",
+        }
         for row in rows
     ]
 
@@ -107,7 +128,10 @@ def get_service_type(service_type_id: int = Path(gt=0)) -> dict:
         ).mappings().first()
     if row is None:
         raise HTTPException(status_code=404, detail="Service type not found.")
-    return {**dict(row), "availability_status": "enquiry_only"}
+    return {
+        **apply_four_service_image_mapping(dict(row)),
+        "availability_status": "enquiry_only",
+    }
 
 
 SERVICE_SELECT = """

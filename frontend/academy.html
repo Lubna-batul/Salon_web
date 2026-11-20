@@ -60,10 +60,30 @@
             <span class="academy-enquiry-accent" aria-hidden="true"></span>
             <h3>Begin Your Beauty Journey</h3>
             <p>Discover the course that inspires you. We’d be delighted to hear about your interests and help you explore your next step.</p>
-            <a class="card-link" href="contact.html">
-              <span>Enquire About Courses</span>
-              <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-            </a>
+            <form class="academy-course-enquiry-form">
+              <label>
+                Course
+                <select name="course_id" required>
+                  <option value="">Loading courses…</option>
+                </select>
+              </label>
+              <label>
+                Student name
+                <input name="student_name" type="text" maxlength="100" autocomplete="name" required />
+              </label>
+              <label>
+                Email
+                <input name="email" type="email" maxlength="100" autocomplete="email" />
+              </label>
+              <label>
+                Phone
+                <input name="phone" type="tel" maxlength="15" autocomplete="tel" />
+              </label>
+              <button class="button" type="submit">Send course enquiry</button>
+              <p class="form-note" data-academy-enquiry-status role="status" aria-live="polite">
+                An enquiry does not confirm course admission.
+              </p>
+            </form>
           </div>
         </div>
       </section>
@@ -74,208 +94,14 @@
           <h2 class="section-title">Explore our professional courses.</h2>
           <p class="lead">Build practical skills across beauty artistry, hair, skincare and salon service.</p>
 
-          <div class="academy-course-grid">
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Guest receiving a manicure in a nail salon" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Professional Nail Art</h3>
-                <p>Develop precise nail-art techniques for creative styles and polished finishes.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Nail preparation and polish application</li>
-                  <li>Decorative detail and design composition</li>
-                  <li>Finishing techniques and tool hygiene</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1505932794465-147d1f1b2c97?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Hands decorated with intricate henna patterns" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Mehendi Art</h3>
-                <p>Explore traditional and contemporary mehendi pattern design for events and personal style.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Motif development and line control</li>
-                  <li>Pattern composition and placement</li>
-                  <li>Design consultation and presentation</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1709477542149-f4e0e21d590b?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Makeup artist applying makeup with a brush" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Professional Makeup</h3>
-                <p>Build practical makeup artistry skills for a range of personal and occasion looks.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Skin preparation and shade matching</li>
-                  <li>Product application and blending</li>
-                  <li>Hygiene, detail and finishing</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1610173827043-9db50e0d8ef9?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Bride in traditional red attire and jewelry" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Bridal Makeup</h3>
-                <p>Plan and create polished bridal looks through consultation and careful application.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Bridal consultation and look planning</li>
-                  <li>Complexion preparation and makeup techniques</li>
-                  <li>Detail work and occasion-ready finishing</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1774660810725-fb04e002003d?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Hairstylist creating an updo for a seated client" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Hair Styling</h3>
-                <p>Practice styling techniques for polished everyday and occasion looks.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Sectioning and blow-dry techniques</li>
-                  <li>Curling, waving and updo foundations</li>
-                  <li>Finishing and style presentation</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1761931403671-d020a14928d9?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Barber cutting hair with scissors and a comb" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Hair Cutting Techniques</h3>
-                <p>Develop technique and confidence across core cutting approaches.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Consultation and sectioning</li>
-                  <li>Scissor control and shape building</li>
-                  <li>Layering and finishing techniques</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1785456390070-9960e3997066?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Woman styling her long wavy blonde hair" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Hair Colouring</h3>
-                <p>Explore professional colour planning, application and finishing techniques.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Colour consultation and theory basics</li>
-                  <li>Sectioning and application methods</li>
-                  <li>Toning, finishing and aftercare guidance</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Guest receiving a facial mask treatment at a spa" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Skincare and Beauty</h3>
-                <p>Explore foundational skincare routines and client-focused beauty care.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Consultation and skin-type awareness</li>
-                  <li>Product selection and cleansing basics</li>
-                  <li>Client care and treatment-area hygiene</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1610992015762-45dca7fa3a85?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Hand with light pink manicured nails" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Professional Manicure and Pedicure</h3>
-                <p>Develop polished hand and foot care techniques with attention to comfort and hygiene.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Nail preparation, shaping and polish application</li>
-                  <li>Comfort-focused hand and foot care</li>
-                  <li>Tool hygiene and finishing techniques</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-
-            <article class="service-card academy-course-card">
-              <div class="image-wrap">
-                <img src="https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Beauty professionals holding salon tools" loading="lazy" />
-              </div>
-              <div class="content">
-                <h3>Salon Professional Training</h3>
-                <p>Strengthen service, communication and day-to-day salon skills for a welcoming client experience.</p>
-                <h4>Skills you’ll learn</h4>
-                <ul class="academy-course-skills">
-                  <li>Client consultation and communication</li>
-                  <li>Service preparation and hygiene</li>
-                  <li>Product knowledge and appointment flow</li>
-                </ul>
-                <a class="card-link" href="contact.html#booking">
-                  <span>Enquire About This Course</span>
-                  <span class="academy-enquiry-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
+          <div
+            class="academy-course-grid"
+            data-academy-course-grid
+            role="status"
+            aria-live="polite"
+          >
+            Loading courses…
           </div>
-          <p class="course-imagery-note">Course images are representative stock photography sourced from Unsplash; they do not depict Evolve courses.</p>
         </div>
       </section>
 

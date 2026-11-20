@@ -1,0 +1,229 @@
+import hashlib
+import os
+import re
+import threading
+import time
+from collections import OrderedDict
+
+from fastapi import APIRouter, HTTPException, Request, status
+from sqlalchemy import text
+
+from backend.database import engine
+from backend.schemas import ContactEnquiryCreate, EnquiryCreated
+
+router = APIRouter(prefix="/contact-enquiries", tags=["enquiries"])
+
+_VALID_IDEMPOTENCY_KEY = re.compile(r"^[A-Za-z0-9._-]{8,128}$")
+
+
+def _positive_integer_setting(name: str, default: int) -> int:
+    try:
+        value = int(os.getenv(name, str(default)))
+        return value if value > 0 else default
+    except (TypeError, ValueError):
+        return default
+
+
+CONTACT_ENQUIRY_RATE_LIMIT = _positive_integer_setting(
+    "CONTACT_ENQUIRY_RATE_LIMIT",
+    5,
+)
+CONTACT_ENQUIRY_RATE_WINDOW_SECONDS = _positive_integer_setting(
+    "CONTACT_ENQUIRY_RATE_WINDOW_SECONDS",
+    60,
+)
+CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS = _positive_integer_setting(
+    "CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS",
+    30,
+)
+
+_MAX_TRACKED_PEERS = 10_000
+_MAX_DUPLICATE_ENTRIES = 4_096
+_rate_windows: OrderedDict[str, tuple[float, int]] = OrderedDict()
+_duplicate_responses: OrderedDict[
+    tuple[str, str, str],
+    tuple[float, int],
+] = OrderedDict()
+_limiter_lock = threading.Lock()
+_clock = time.time
+
+
+def configure_contact_enquiry_protection(
+    *,
+    rate_limit: int | None = None,
+    rate_window_seconds: int | None = None,
+    duplicate_window_seconds: int | None = None,
+    clock=time.time,
+) -> None:
+    global CONTACT_ENQUIRY_RATE_LIMIT
+    global CONTACT_ENQUIRY_RATE_WINDOW_SECONDS
+    global CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS
+    global _clock
+
+    if rate_limit is not None:
+        if rate_limit <= 0:
+            raise ValueError("rate_limit must be positive")
+        CONTACT_ENQUIRY_RATE_LIMIT = rate_limit
+    if rate_window_seconds is not None:
+        if rate_window_seconds <= 0:
+            raise ValueError("rate_window_seconds must be positive")
+        CONTACT_ENQUIRY_RATE_WINDOW_SECONDS = rate_window_seconds
+    if duplicate_window_seconds is not None:
+        if duplicate_window_seconds <= 0:
+            raise ValueError("duplicate_window_seconds must be positive")
+        CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS = duplicate_window_seconds
+    _clock = clock
+    reset_contact_enquiry_protection()
+
+
+def reset_contact_enquiry_protection() -> None:
+    with _limiter_lock:
+        _rate_windows.clear()
+        _duplicate_responses.clear()
+
+
+def _peer_key(request: Request) -> str:
+    return request.client.host if request.client and request.client.host else "unknown"
+
+
+def _check_rate_limit(peer: str) -> None:
+    now = _clock()
+    with _limiter_lock:
+        stale_peers = [
+            key
+            for key, (window_started, _) in _rate_windows.items()
+            if now - window_started >= CONTACT_ENQUIRY_RATE_WINDOW_SECONDS
+        ]
+        for key in stale_peers:
+            del _rate_windows[key]
+
+        window = _rate_windows.get(peer)
+        if window is None:
+            if len(_rate_windows) >= _MAX_TRACKED_PEERS:
+                _rate_windows.popitem(last=False)
+            _rate_windows[peer] = (now, 1)
+            return
+
+        window_started, count = window
+        if now - window_started >= CONTACT_ENQUIRY_RATE_WINDOW_SECONDS:
+            _rate_windows[peer] = (now, 1)
+            return
+        if count >= CONTACT_ENQUIRY_RATE_LIMIT:
+            retry_after = max(
+                1,
+                int(CONTACT_ENQUIRY_RATE_WINDOW_SECONDS - (now - window_started)),
+            )
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="Too many enquiry requests. Please wait a moment and try again.",
+                headers={"Retry-After": str(retry_after)},
+            )
+        _rate_windows[peer] = (window_started, count + 1)
+
+
+def _fingerprint(enquiry: ContactEnquiryCreate) -> str:
+    payload = (
+        enquiry.name,
+        str(enquiry.email),
+        enquiry.phone or "",
+        enquiry.message,
+    )
+    return hashlib.sha256(
+        "\n".join(payload).encode("utf-8")
+    ).hexdigest()
+
+
+def _check_duplicate(
+    peer: str,
+    fingerprint: str,
+    idempotency_key: str | None,
+) -> int | None:
+    if idempotency_key is None:
+        return None
+
+    cache_key = (peer, idempotency_key, fingerprint)
+    now = _clock()
+    with _limiter_lock:
+        expired = [
+            key
+            for key, (expires_at, _) in _duplicate_responses.items()
+            if expires_at <= now
+        ]
+        for key in expired:
+            del _duplicate_responses[key]
+
+        existing = _duplicate_responses.get(cache_key)
+        if existing is not None:
+            return existing[1]
+
+        for (cached_peer, cached_key, cached_fingerprint), _ in list(
+            _duplicate_responses.items()
+        ):
+            if (
+                cached_peer == peer
+                and cached_key == idempotency_key
+                and cached_fingerprint != fingerprint
+            ):
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="This request key was already used with different enquiry details.",
+                )
+    return None
+
+
+def _store_duplicate(
+    peer: str,
+    fingerprint: str,
+    idempotency_key: str,
+    enquiry_id: int,
+) -> None:
+    with _limiter_lock:
+        if len(_duplicate_responses) >= _MAX_DUPLICATE_ENTRIES:
+            _duplicate_responses.popitem(last=False)
+        _duplicate_responses[
+            (peer, idempotency_key, fingerprint)
+        ] = (
+            _clock() + CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS,
+            enquiry_id,
+        )
+
+
+@router.post("", response_model=EnquiryCreated, status_code=status.HTTP_201_CREATED)
+def create_contact_enquiry(
+    enquiry: ContactEnquiryCreate,
+    request: Request,
+) -> dict[str, int]:
+    peer = _peer_key(request)
+    _check_rate_limit(peer)
+
+    idempotency_key = request.headers.get("Idempotency-Key")
+    if idempotency_key is not None:
+        idempotency_key = idempotency_key.strip()
+        if not _VALID_IDEMPOTENCY_KEY.fullmatch(idempotency_key):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="The idempotency key is invalid.",
+            )
+
+    fingerprint = _fingerprint(enquiry)
+    duplicate_id = _check_duplicate(peer, fingerprint, idempotency_key)
+    if duplicate_id is not None:
+        return {"enquiry_id": duplicate_id}
+
+    with engine.begin() as connection:
+        result = connection.execute(
+            text(
+                "INSERT INTO contact_enquiries (name, email, phone, message) "
+                "VALUES (:name, :email, :phone, :message)"
+            ),
+            {
+                "name": enquiry.name,
+                "email": str(enquiry.email),
+                "phone": enquiry.phone,
+                "message": enquiry.message,
+            },
+        )
+    enquiry_id = int(result.lastrowid)
+    if idempotency_key is not None:
+        _store_duplicate(peer, fingerprint, idempotency_key, enquiry_id)
+    return {"enquiry_id": enquiry_id}

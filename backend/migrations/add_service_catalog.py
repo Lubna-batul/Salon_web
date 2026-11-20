@@ -3,7 +3,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.catalog_data import SERVICE_CATALOG
+from backend.catalog_data import FOUR_MEN_SERVICE_IMAGES, SERVICE_CATALOG
 from backend.database import engine
 from backend.models import Base, ServiceCategory, ServiceType
 
@@ -42,18 +42,25 @@ def migrate_and_seed() -> None:
                         )
                     )
                     if service_type is None:
-                        session.add(
-                            ServiceType(
-                                category_id=category.category_id,
-                                service_name=name,
-                                slug=name.lower().replace(" ", "-").replace("&", "and"),
-                                description=description,
-                                image_path=category_data["image"],
-                                image_alt=category_data["alt"],
-                                verification_status="proposed",
-                                is_active=True,
-                            )
+                        service_type = ServiceType(
+                            category_id=category.category_id,
+                            service_name=name,
+                            slug=name.lower().replace(" ", "-").replace("&", "and"),
+                            description=description,
+                            image_path=category_data["image"],
+                            image_alt=category_data["alt"],
+                            verification_status="proposed",
+                            is_active=True,
                         )
+                        session.add(service_type)
+                        session.flush()
+
+                    image_mapping = FOUR_MEN_SERVICE_IMAGES.get(
+                        (gender, category_data["name"], name)
+                    )
+                    if image_mapping is not None:
+                        service_type.image_path = image_mapping["image_path"]
+                        service_type.image_alt = image_mapping["image_alt"]
 
 
 if __name__ == "__main__":

@@ -98,43 +98,24 @@ Each new image below is an original Pexels photograph. The linked photo pages li
 | `women-body-spa.jpg` | A client receives an oil massage during a spa session. | [Pexels photo](https://www.pexels.com/photo/relaxing-spa-massage-session-with-oil-therapy-32729955/) |
 | `women-aromatherapy-massage.jpg` | A therapist gives a woman a massage in an aromatherapy spa setting. | [Pexels photo](https://www.pexels.com/photo/aromatherapy-and-massage-at-the-spa-19666192/) |
 
-## Service types still without a suitable verified photograph
+## User-provided photographs
 
-These types are intentionally not mapped to an unrelated image. The frontend shows its existing no-photo state for them.
+These supplied PNG photographs are mapped to the corresponding men's service types.
 
-| Section | Category | Service type |
-| --- | --- | --- |
-| Men | Hair Colour | Fashion Colour |
-| Men | Hair Colour | Global Hair Colour |
-| Men | Hair Colour | Grey Coverage |
-| Men | Hair Colour | Highlights |
-| Men | Hair Colour | Root Touch-Up |
-| Men | Hair Treatments | Hair Repair Treatment |
-| Men | Hair Treatments | Keratin Treatment |
-| Men | Haircuts & Styling | Crew Cut |
-| Men | Haircuts & Styling | Wolf Cut |
-| Men | Head Massage & Spa | Head and Shoulder Massage |
-| Men | Head Massage & Spa | Oil Head Massage |
-| Men | Manicure & Pedicure | Classic Pedicure |
-| Men | Manicure & Pedicure | Express Pedicure |
-| Men | Scalp Treatments | Anti-Dandruff Scalp Care |
-| Men | Scalp Treatments | Nourishing Scalp Treatment |
-| Men | Scalp Treatments | Relaxing Scalp Care |
-| Men | Scalp Treatments | Scalp Detox |
-| Men | Skincare & Facials | Hydrating Facial |
-| Women | Aesthetic Treatments | Exfoliation Treatment |
-| Women | Aesthetic Treatments | Skin Consultation |
-| Women | Aesthetic Treatments | Skin Rejuvenation |
-| Women | Hair Colour & Highlights | Balayage |
-| Women | Hair Colour & Highlights | Ombre |
-| Women | Hair Extensions | Clip-In Extensions |
-| Women | Hair Extensions | Extension Maintenance |
-| Women | Hair Extensions | Length Extensions |
-| Women | Hair Extensions | Tape-In Extensions |
-| Women | Hair Extensions | Volume Extensions |
-| Women | Hair Treatments | Smoothening |
-| Women | Haircuts & Styling | Butterfly Cut |
-| Women | Haircuts & Styling | U-Cut |
-| Women | Waxing & Threading | Full Arms Waxing |
-| Women | Waxing & Threading | Full Face Threading |
-| Women | Waxing & Threading | Upper Lip Threading |
+| Service | Local file | Depiction | Source |
+| --- | --- | --- | --- |
+| Hydrating Facial | `hydrating-facial.png` | A male client receives a facial treatment. | User-provided image attachment |
+| Hair Repair Treatment | `hair-repair-treatment.png` | A man receives a restorative hair treatment beneath a salon hood dryer. | User-provided image attachment |
+| Anti-Dandruff Scalp Care | `anti-dandruff-scalp-care.png` | Close-up of a man's scalp with visible flakes. | User-provided image attachment |
+| Scalp Detox | `scalp-detox.png` | A stylist cleanses a male client's hair at a salon basin. | User-provided image attachment |
+| Nourishing Scalp Treatment | `nourishing-scalp-treatment.png` | A practitioner performs a close-up scalp treatment on a male client. | User-provided image attachment |
+| Relaxing Scalp Care | `relaxing-scalp-care.png` | A stylist gives a male client a relaxing scalp massage. | User-provided image attachment |
+
+## Supplied Men service photographs
+
+| Service | Local file | Depiction | Source and licence/attribution |
+| --- | --- | --- | --- |
+| Head and Shoulder Massage | `men-head-shoulder-massage.png` | Therapist performing an upper-back and shoulder massage on a man | User-provided attachment; original source/licence/photographer not supplied |
+| Oil Head Massage | `men-oil-head-massage.png` | Therapist giving a man a facial and head massage | User-provided attachment; original source/licence/photographer not supplied |
+| Classic Pedicure | `men-classic-pedicure.png` | Nail technician providing male foot and nail care | User-provided attachment; original source/licence/photographer not supplied |
+| Express Pedicure | `men-express-pedicure.png` | Close-up of neatly groomed male feet receiving a short foot and nail tidy | User-provided attachment; original source/licence/photographer not supplied |

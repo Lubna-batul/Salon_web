@@ -78,10 +78,45 @@
   },
   {
     "gender": "men",
+    "category": "Hair Treatments",
+    "service": "Hair Repair Treatment",
+    "image": "assets/images/hair-repair-treatment.png",
+    "alt": "A man receives a restorative hair treatment beneath a salon hood dryer."
+  },
+  {
+    "gender": "men",
     "category": "Scalp Treatments",
     "service": "Scalp Cleansing",
     "image": "assets/images/men-scalp-treatment.jpg",
     "alt": "A man receives a shampoo and scalp wash at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Scalp Treatments",
+    "service": "Anti-Dandruff Scalp Care",
+    "image": "assets/images/anti-dandruff-scalp-care.png",
+    "alt": "Close-up of scalp and visible flakes during dandruff-focused care."
+  },
+  {
+    "gender": "men",
+    "category": "Scalp Treatments",
+    "service": "Scalp Detox",
+    "image": "assets/images/scalp-detox.png",
+    "alt": "A stylist cleanses a male client's hair at a salon basin."
+  },
+  {
+    "gender": "men",
+    "category": "Scalp Treatments",
+    "service": "Nourishing Scalp Treatment",
+    "image": "assets/images/nourishing-scalp-treatment.png",
+    "alt": "A practitioner performs a close-up scalp treatment on a male client."
+  },
+  {
+    "gender": "men",
+    "category": "Scalp Treatments",
+    "service": "Relaxing Scalp Care",
+    "image": "assets/images/relaxing-scalp-care.png",
+    "alt": "A stylist gives a male client a relaxing scalp massage."
   },
   {
     "gender": "men",
@@ -96,6 +131,13 @@
     "service": "Deep Cleansing Facial",
     "image": "assets/images/men-deep-cleansing-facial.jpg",
     "alt": "A man applies a facial cleanser as part of his skincare routine."
+  },
+  {
+    "gender": "men",
+    "category": "Skincare & Facials",
+    "service": "Hydrating Facial",
+    "image": "assets/images/hydrating-facial.png",
+    "alt": "A male client receives a hydrating facial treatment from a skincare professional."
   },
   {
     "gender": "men",
@@ -134,10 +176,38 @@
   },
   {
     "gender": "men",
+    "category": "Head Massage & Spa",
+    "service": "Head and Shoulder Massage",
+    "image": "assets/images/men-head-shoulder-massage.png",
+    "alt": "A massage therapist performs a relaxing shoulder and upper-back massage on a man."
+  },
+  {
+    "gender": "men",
+    "category": "Head Massage & Spa",
+    "service": "Oil Head Massage",
+    "image": "assets/images/men-oil-head-massage.png",
+    "alt": "A spa therapist gives a man a relaxing head and face massage."
+  },
+  {
+    "gender": "men",
     "category": "Manicure & Pedicure",
     "service": "Classic Manicure",
     "image": "assets/images/men-manicure.jpg",
     "alt": "A man receives a manicure at a salon."
+  },
+  {
+    "gender": "men",
+    "category": "Manicure & Pedicure",
+    "service": "Classic Pedicure",
+    "image": "assets/images/men-classic-pedicure.png",
+    "alt": "A nail technician provides a man with a foot and nail care pedicure."
+  },
+  {
+    "gender": "men",
+    "category": "Manicure & Pedicure",
+    "service": "Express Pedicure",
+    "image": "assets/images/men-express-pedicure.png",
+    "alt": "A close-up of neatly groomed male feet receiving a short nail and foot tidy."
   },
   {
     "gender": "men",

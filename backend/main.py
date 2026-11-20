@@ -21,8 +21,16 @@ from backend.routes.staff import router as staff_router
 logger = logging.getLogger(__name__)
 
 
-def parse_cors_origins(value: str) -> list[str]:
+def parse_cors_origins(
+    value: str,
+    environment: str = "development",
+) -> list[str]:
     origins: list[str] = []
+    environment = environment.strip().lower()
+    if environment not in {"development", "testing", "production"}:
+        raise RuntimeError(
+            "ENVIRONMENT must be one of: development, testing, production"
+        )
     for configured_origin in value.split(","):
         origin = configured_origin.strip()
         if not origin:
@@ -49,6 +57,10 @@ def parse_cors_origins(value: str) -> list[str]:
             raise RuntimeError(
                 "CORS_ORIGINS contains an invalid port."
             ) from error
+        if environment == "production" and parsed.scheme != "https":
+            raise RuntimeError(
+                "CORS_ORIGINS must use HTTPS origins in production"
+            )
         origins.append(origin)
     return origins
 
@@ -59,7 +71,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
-configured_origins = parse_cors_origins(os.getenv("CORS_ORIGINS", ""))
+environment = os.getenv("ENVIRONMENT", "development").strip().lower()
+configured_origins = parse_cors_origins(
+    os.getenv("CORS_ORIGINS", ""),
+    environment,
+)
 if configured_origins:
     app.add_middleware(
         CORSMiddleware,
@@ -98,6 +114,13 @@ def check_database() -> dict[str, str]:
     with engine.connect() as connection:
         database_name = connection.execute(text("SELECT DATABASE()")).scalar_one()
     return {"status": "connected", "database": database_name}
+
+
+@app.get("/health/ready", tags=["health"])
+def readiness_check() -> dict[str, str]:
+    with engine.connect() as connection:
+        connection.execute(text("SELECT 1")).scalar_one()
+    return {"status": "ready"}
 
 
 frontend_directory = Path(__file__).resolve().parent.parent / "frontend"

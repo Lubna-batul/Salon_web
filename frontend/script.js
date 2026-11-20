@@ -289,6 +289,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const enquiryForm = document.querySelector('.contact-enquiry-form');
+  let enquiryIdempotencyKey = null;
+  const createIdempotencyKey = () => {
+    if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+    return `enquiry-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  };
+  enquiryForm?.addEventListener('input', () => {
+    if (enquiryForm.dataset.submitting !== 'true') enquiryIdempotencyKey = null;
+  });
+  enquiryForm?.addEventListener('change', () => {
+    if (enquiryForm.dataset.submitting !== 'true') enquiryIdempotencyKey = null;
+  });
   const requestedService = new URLSearchParams(window.location.search)
     .get('service')
     ?.replace(/\s+/g, ' ')
@@ -341,9 +352,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setStatus('pending', 'Sending your enquiry…');
 
     try {
+      if (!enquiryIdempotencyKey) enquiryIdempotencyKey = createIdempotencyKey();
       const response = await fetch('/contact-enquiries', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': enquiryIdempotencyKey,
+        },
         body: JSON.stringify({
           name: formData.get('name'),
           email: formData.get('email'),
@@ -357,8 +372,11 @@ document.addEventListener('DOMContentLoaded', () => {
           'success',
           'Your enquiry has been received. Our team will follow up; this is not a confirmed appointment.',
         );
+        enquiryIdempotencyKey = null;
       } else if (response.status === 422) {
         setStatus('error', 'Please check your name, email, phone and message, then try again.');
+      } else if (response.status === 429) {
+        setStatus('error', 'Too many enquiry requests. Please wait a moment and try again.');
       } else if (response.status === 503) {
         setStatus('error', 'The enquiry service is temporarily unavailable. Please try again shortly.');
       } else {
@@ -375,6 +393,198 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  const academyCourseGrid = document.querySelector('[data-academy-course-grid]');
+  const academyEnquiryForm = document.querySelector('.academy-course-enquiry-form');
+
+  const setAcademyEnquiryStatus = (state, message) => {
+    const status = academyEnquiryForm?.querySelector('[data-academy-enquiry-status]');
+    if (!status) return;
+    status.dataset.state = state;
+    status.textContent = message;
+  };
+
+  const populateAcademyCourses = async () => {
+    const courseSelect = academyEnquiryForm?.elements.namedItem('course_id');
+    if (!(academyCourseGrid instanceof HTMLElement)) return;
+
+    academyCourseGrid.textContent = 'Loading courses…';
+    if (courseSelect instanceof HTMLSelectElement) {
+      courseSelect.replaceChildren(new Option('Loading courses…', ''));
+      courseSelect.disabled = true;
+    }
+
+    try {
+      const response = await fetch('/academy/courses', {
+        headers: { Accept: 'application/json' },
+      });
+      if (!response.ok) throw new Error('Course listing request failed.');
+
+      const courses = await response.json();
+      if (!Array.isArray(courses)) throw new Error('Invalid course listing response.');
+
+      if (courses.length === 0) {
+        academyCourseGrid.replaceChildren();
+        const empty = document.createElement('p');
+        empty.className = 'academy-course-state';
+        empty.textContent = 'No active courses are listed yet. Please contact the team for current course information.';
+        academyCourseGrid.append(empty);
+        if (courseSelect instanceof HTMLSelectElement) {
+          courseSelect.replaceChildren(new Option('No courses currently available', ''));
+        }
+        return;
+      }
+
+      academyCourseGrid.replaceChildren();
+      if (courseSelect instanceof HTMLSelectElement) {
+        courseSelect.replaceChildren(new Option('Choose a course', ''));
+      }
+
+      courses.forEach((course) => {
+        if (!course || !Number.isInteger(course.course_id) || !course.course_name) return;
+
+        if (courseSelect instanceof HTMLSelectElement) {
+          courseSelect.add(new Option(course.course_name, String(course.course_id)));
+        }
+
+        const card = document.createElement('article');
+        card.className = 'service-card academy-course-card';
+        const content = document.createElement('div');
+        content.className = 'content';
+
+        const heading = document.createElement('h3');
+        heading.textContent = course.course_name;
+        content.append(heading);
+
+        if (typeof course.description === 'string' && course.description.trim()) {
+          const description = document.createElement('p');
+          description.textContent = course.description;
+          content.append(description);
+        }
+        if (typeof course.duration === 'string' && course.duration.trim()) {
+          const duration = document.createElement('p');
+          duration.className = 'academy-course-duration';
+          duration.textContent = `Duration: ${course.duration}`;
+          content.append(duration);
+        }
+
+        const enquiryLink = document.createElement('button');
+        enquiryLink.type = 'button';
+        enquiryLink.className = 'card-link';
+        enquiryLink.textContent = 'Enquire About This Course';
+        enquiryLink.addEventListener('click', () => {
+          if (courseSelect instanceof HTMLSelectElement) {
+            courseSelect.value = String(course.course_id);
+          }
+          academyEnquiryForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          academyEnquiryForm?.elements.namedItem('student_name')?.focus();
+        });
+        content.append(enquiryLink);
+        card.append(content);
+        academyCourseGrid.append(card);
+      });
+    } catch {
+      academyCourseGrid.replaceChildren();
+      const failure = document.createElement('p');
+      failure.className = 'academy-course-state';
+      failure.setAttribute('role', 'alert');
+      failure.textContent = 'Course information could not be loaded. Please try again or contact the team.';
+      academyCourseGrid.append(failure);
+      if (courseSelect instanceof HTMLSelectElement) {
+        courseSelect.replaceChildren(new Option('Courses unavailable', ''));
+      }
+      setAcademyEnquiryStatus(
+        'error',
+        'Course information is unavailable. Please try again shortly.',
+      );
+    } finally {
+      if (courseSelect instanceof HTMLSelectElement) {
+        courseSelect.disabled = false;
+      }
+    }
+  };
+
+  academyEnquiryForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!(academyEnquiryForm instanceof HTMLFormElement)) return;
+    if (!academyEnquiryForm.reportValidity()) return;
+
+    const formData = new FormData(academyEnquiryForm);
+    const email = String(formData.get('email') || '').trim();
+    const phone = String(formData.get('phone') || '').trim();
+    if (!email && !phone) {
+      setAcademyEnquiryStatus(
+        'error',
+        'Please provide an email address or phone number.',
+      );
+      return;
+    }
+    if (academyEnquiryForm.dataset.submitting === 'true') return;
+
+    const submitButton = academyEnquiryForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton?.textContent || 'Send course enquiry';
+    academyEnquiryForm.dataset.submitting = 'true';
+    academyEnquiryForm.setAttribute('aria-busy', 'true');
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending…';
+    }
+    setAcademyEnquiryStatus('pending', 'Sending your course enquiry…');
+
+    try {
+      const response = await fetch('/academy/course-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course_id: Number(formData.get('course_id')),
+          student_name: formData.get('student_name'),
+          email: email || null,
+          phone: phone || null,
+        }),
+      });
+
+      if (response.status === 201) {
+        setAcademyEnquiryStatus(
+          'success',
+          'Your course enquiry was received. Our team will follow up; this is not a confirmed course admission.',
+        );
+      } else if (response.status === 422) {
+        setAcademyEnquiryStatus(
+          'error',
+          'Please check the course, student name, email and phone, then try again.',
+        );
+      } else if (response.status === 404) {
+        setAcademyEnquiryStatus(
+          'error',
+          'That course is no longer available. Please choose another active course.',
+        );
+      } else if (response.status === 409) {
+        setAcademyEnquiryStatus(
+          'error',
+          'Your enquiry could not be recorded. Please try again.',
+        );
+      } else {
+        setAcademyEnquiryStatus(
+          'error',
+          'We could not send your course enquiry. Please try again or contact the team.',
+        );
+      }
+    } catch {
+      setAcademyEnquiryStatus(
+        'error',
+        'We could not send your course enquiry. Check your connection and try again.',
+      );
+    } finally {
+      academyEnquiryForm.dataset.submitting = 'false';
+      academyEnquiryForm.removeAttribute('aria-busy');
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    }
+  });
+
+  if (academyCourseGrid) void populateAcademyCourses();
 
   document.addEventListener('click', (event) => {
     const clickedElement = event.target?.closest ? event.target : event.target?.parentElement;

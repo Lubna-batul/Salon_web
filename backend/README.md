@@ -37,8 +37,19 @@ Swagger documentation is available at `/docs` while the application is running.
 4. Start the API and frontend together from the project root:
 
    ```powershell
+   # Local development
    .\.venv\Scripts\python.exe -m uvicorn backend.main:app --reload
+
+   # Production behind a HTTPS reverse proxy
+   .\.venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --workers 2 --proxy-headers --forwarded-allow-ips=127.0.0.1
    ```
+
+   Set `ENVIRONMENT=production` and configure `DB_HOST`, `DB_PORT`, `DB_NAME`,
+   `DB_USER`, `DB_PASSWORD`, and approved HTTPS `CORS_ORIGINS` in the hosting
+   environment. Do not commit `.env` or copy a local password into production.
+   Production HTTPS and public certificate termination should be handled by the
+   reverse proxy or hosting platform. `DB_SSL_CA` is optional for MySQL providers
+   that require a CA certificate path.
 
    The frontend is served by FastAPI from the same origin as its APIs. Open
    `http://127.0.0.1:8000/` for the site, `http://127.0.0.1:8000/services.html`
@@ -53,6 +64,7 @@ Swagger documentation is available at `/docs` while the application is running.
 | --- | --- | --- |
 | GET | `/health` | Application health |
 | GET | `/health/db` | Verify MySQL connectivity and return the selected database name |
+| GET | `/health/ready` | Read-only database readiness check |
 | GET | `/categories` | List categories |
 | GET | `/categories/{category_id}` | Get one category |
 | GET | `/categories/{category_id}/services` | List a category's services |
@@ -124,6 +136,41 @@ $env:RUN_MYSQL_READONLY_TESTS = "1"
 This checks health and public GET response shapes only; it performs no inserts,
 updates, or deletes.
 
+## Migration and backup procedure
+
+The `backend/migrations/add_service_catalog.py` script is an additive catalog
+seed, not a versioned migration framework. It uses `create_all` for missing
+catalogue tables and inserts missing category/type rows. Before running it:
+
+1. Back up the database.
+2. Review the proposed catalogue and confirm it is safe for the target environment.
+3. Run the script against a staging copy of the database first.
+4. Review the new rows through the read-only API.
+5. Run the migration against production only during an approved maintenance window.
+
+For a safe MySQL backup, use credentials supplied interactively and keep the
+backup outside the application directory:
+
+```powershell
+mysqldump --host=<host> --port=<port> --user=<user> --password `
+  --single-transaction --routines --triggers `
+  --result-file=<approved-backup-path>\salon_marketing-before-change.sql `
+  <database-name>
+```
+
+Verify the dump file exists and retain it according to the salon's backup policy.
+Restore is intentionally documented but must not be executed without an explicit
+recovery decision:
+
+```powershell
+mysql --host=<host> --port=<port> --user=<user> --password `
+  <database-name> < <approved-backup-path>\salon_marketing-before-change.sql
+```
+
+Restore should be tested against a disposable staging database before any
+production recovery. Never include database passwords in shell commands,
+logs, source control, or this report.
+
 ## Security and schema-dependent limitations
 
 - The inspected appointment tables require a customer and date/time, allow an
@@ -151,3 +198,11 @@ updates, or deletes.
   service or category is included in the enquiry message because the existing
   table has no dedicated service column. A successful response confirms receipt
   of an enquiry only; it does not reserve or confirm an appointment.
+- `POST /contact-enquiries` uses an in-memory, peer-IP-based fixed window.
+  Configure `CONTACT_ENQUIRY_RATE_LIMIT` (default `5`) and
+  `CONTACT_ENQUIRY_RATE_WINDOW_SECONDS` (default `60`). It also caches successful
+  responses briefly for an `Idempotency-Key`, configurable with
+  `CONTACT_ENQUIRY_DUPLICATE_WINDOW_SECONDS` (default `30`).
+- In-memory protection is process-local. It does not share state across multiple
+  workers and resets on process restart. It is not reliable idempotency storage
+  and must not be described as production-grade duplicate protection.

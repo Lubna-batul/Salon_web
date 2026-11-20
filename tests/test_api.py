@@ -1,4 +1,5 @@
 import re
+import time
 from pathlib import Path as FilePath
 
 import pytest
@@ -9,13 +10,19 @@ from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
 from backend import database, main
-from backend.catalog_data import SERVICE_CATALOG
+from backend.catalog_data import FOUR_MEN_SERVICE_IMAGES, SERVICE_CATALOG
 from backend.models import Base, ServiceCategory, ServiceType
 from backend.routes import academy, customers, enquiries, offers, services, staff
 
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
+    enquiries.configure_contact_enquiry_protection(
+        rate_limit=5,
+        rate_window_seconds=60,
+        duplicate_window_seconds=30,
+        clock=time.time,
+    )
     test_engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -119,6 +126,7 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
 
     with TestClient(main.app) as test_client:
         yield test_client
+    enquiries.reset_contact_enquiry_protection()
     test_engine.dispose()
 
 
@@ -128,6 +136,7 @@ def test_health_and_database_health(client: TestClient) -> None:
         "status": "connected",
         "database": "salon_marketing_test",
     }
+    assert client.get("/health/ready").json() == {"status": "ready"}
 
 
 def test_frontend_is_served_from_the_api_origin(client: TestClient) -> None:
@@ -173,6 +182,33 @@ def test_cors_configuration_requires_exact_origins() -> None:
     ) == ["http://localhost:5500", "https://evolve.example"]
     with pytest.raises(RuntimeError):
         main.parse_cors_origins("*")
+    assert main.parse_cors_origins(
+        "https://evolve.example",
+        "production",
+    ) == ["https://evolve.example"]
+    with pytest.raises(RuntimeError):
+        main.parse_cors_origins(
+            "http://evolve.example",
+            "production",
+        )
+    with pytest.raises(RuntimeError):
+        main.parse_cors_origins(
+            "https://evolve.example",
+            "unsupported",
+        )
+
+
+def test_environment_example_contains_no_real_credentials() -> None:
+    example = (
+        FilePath(__file__).resolve().parents[1]
+        / "backend"
+        / ".env.example"
+    ).read_text(encoding="utf-8")
+    assert "ENVIRONMENT=development" in example
+    assert "DB_USER=" in example
+    assert "DB_PASSWORD=" in example
+    assert "DB_SSL_CA=" in example
+    assert "CORS_ORIGINS=" in example
     with pytest.raises(RuntimeError):
         main.parse_cors_origins("http://localhost:5500/path")
 
@@ -252,6 +288,115 @@ def test_service_catalog_is_gender_separated_and_enquiry_only(client: TestClient
     assert client.get("/service-categories/999/types").status_code == 404
     assert client.get("/service-types/999").status_code == 404
     assert client.get("/service-types/-1").status_code == 422
+
+
+def test_four_men_service_images_are_returned_by_api(client: TestClient) -> None:
+    with Session(database.engine) as session, session.begin():
+        head_category = ServiceCategory(
+            category_id=7,
+            gender="men",
+            category_name="Head Massage & Spa",
+            slug="head-massage-spa",
+            description="Head and shoulder massage options.",
+            image_path="assets/images/men-head-massage.jpg",
+            image_alt="A barber massages a man's head.",
+            is_active=True,
+        )
+        pedicure_category = ServiceCategory(
+            category_id=8,
+            gender="men",
+            category_name="Manicure & Pedicure",
+            slug="manicure-pedicure",
+            description="Hand and foot nail-care options.",
+            image_path="assets/images/men-manicure.jpg",
+            image_alt="A man receives a manicure.",
+            is_active=True,
+        )
+        session.add_all([head_category, pedicure_category])
+        session.flush()
+        for name, mapping in (
+            (
+                "Head and Shoulder Massage",
+                FOUR_MEN_SERVICE_IMAGES[
+                    ("men", "Head Massage & Spa", "Head and Shoulder Massage")
+                ],
+            ),
+            (
+                "Oil Head Massage",
+                FOUR_MEN_SERVICE_IMAGES[
+                    ("men", "Head Massage & Spa", "Oil Head Massage")
+                ],
+            ),
+            (
+                "Classic Pedicure",
+                FOUR_MEN_SERVICE_IMAGES[
+                    ("men", "Manicure & Pedicure", "Classic Pedicure")
+                ],
+            ),
+            (
+                "Express Pedicure",
+                FOUR_MEN_SERVICE_IMAGES[
+                    ("men", "Manicure & Pedicure", "Express Pedicure")
+                ],
+            ),
+        ):
+            category_id = 7 if name in {
+                "Head and Shoulder Massage",
+                "Oil Head Massage",
+            } else 8
+            session.add(
+                ServiceType(
+                    category_id=category_id,
+                    service_name=name,
+                    slug=name.lower().replace(" ", "-"),
+                    description=f"{name} salon service.",
+                    image_path=mapping["image_path"],
+                    image_alt=mapping["image_alt"],
+                    verification_status="proposed",
+                    is_active=True,
+                )
+            )
+    head_response = client.get("/service-categories/7/types")
+    pedicure_response = client.get("/service-categories/8/types")
+    assert head_response.status_code == 200
+    assert pedicure_response.status_code == 200
+    by_name = {
+        item["service_name"]: item
+        for item in head_response.json() + pedicure_response.json()
+    }
+    for name, mapping in (
+        (
+            "Head and Shoulder Massage",
+            FOUR_MEN_SERVICE_IMAGES[
+                ("men", "Head Massage & Spa", "Head and Shoulder Massage")
+            ],
+        ),
+        (
+            "Oil Head Massage",
+            FOUR_MEN_SERVICE_IMAGES[
+                ("men", "Head Massage & Spa", "Oil Head Massage")
+            ],
+        ),
+        (
+            "Classic Pedicure",
+            FOUR_MEN_SERVICE_IMAGES[
+                ("men", "Manicure & Pedicure", "Classic Pedicure")
+            ],
+        ),
+        (
+            "Express Pedicure",
+            FOUR_MEN_SERVICE_IMAGES[
+                ("men", "Manicure & Pedicure", "Express Pedicure")
+            ],
+        ),
+    ):
+        assert by_name[name]["image_path"] == mapping["image_path"]
+        assert by_name[name]["image_alt"] == mapping["image_alt"]
+        detail = client.get(
+            f"/service-types/{by_name[name]['service_type_id']}"
+        )
+        assert detail.status_code == 200
+        assert detail.json()["image_path"] == mapping["image_path"]
 
 
 def test_proposed_catalogue_data_has_five_described_types_per_category() -> None:
@@ -348,6 +493,84 @@ def test_contact_enquiry_is_saved_and_validated(client: TestClient) -> None:
     ).status_code == 422
 
 
+def test_contact_enquiry_rate_limit_and_window_reset(
+    client: TestClient,
+) -> None:
+    now = [1000.0]
+    enquiries.configure_contact_enquiry_protection(
+        rate_limit=2,
+        rate_window_seconds=10,
+        duplicate_window_seconds=30,
+        clock=lambda: now[0],
+    )
+    payload = {
+        "name": "Test Guest",
+        "email": "rate-limit@example.com",
+        "message": "Please contact me.",
+    }
+
+    assert client.post("/contact-enquiries", json=payload).status_code == 201
+    assert client.post("/contact-enquiries", json=payload).status_code == 201
+    limited = client.post("/contact-enquiries", json=payload)
+    assert limited.status_code == 429
+    assert limited.json() == {
+        "detail": "Too many enquiry requests. Please wait a moment and try again."
+    }
+    assert limited.headers["retry-after"] == "10"
+
+    now[0] += 10
+    assert client.post("/contact-enquiries", json=payload).status_code == 201
+
+
+def test_contact_enquiry_idempotency_is_short_lived(
+    client: TestClient,
+) -> None:
+    now = [2000.0]
+    enquiries.configure_contact_enquiry_protection(
+        rate_limit=5,
+        rate_window_seconds=60,
+        duplicate_window_seconds=10,
+        clock=lambda: now[0],
+    )
+    payload = {
+        "name": "Idempotent Guest",
+        "email": "idempotent@example.com",
+        "message": "Please contact me.",
+    }
+    headers = {"Idempotency-Key": "browser-request-123"}
+
+    first = client.post("/contact-enquiries", json=payload, headers=headers)
+    assert first.status_code == 201
+    duplicate = client.post("/contact-enquiries", json=payload, headers=headers)
+    assert duplicate.status_code == 201
+    assert duplicate.json() == first.json()
+
+    conflict = client.post(
+        "/contact-enquiries",
+        json={**payload, "message": "A different enquiry."},
+        headers=headers,
+    )
+    assert conflict.status_code == 409
+    assert conflict.json() == {
+        "detail": "This request key was already used with different enquiry details."
+    }
+
+    now[0] += 10
+    after_window = client.post(
+        "/contact-enquiries",
+        json={**payload, "message": "A different enquiry."},
+        headers=headers,
+    )
+    assert after_window.status_code == 201
+
+    invalid_key = client.post(
+        "/contact-enquiries",
+        json=payload,
+        headers={"Idempotency-Key": "bad"},
+    )
+    assert invalid_key.status_code == 400
+
+
 def test_contact_enquiry_database_errors_are_sanitized(
     client: TestClient,
     monkeypatch: pytest.MonkeyPatch,
@@ -408,6 +631,69 @@ def test_academy_courses_and_enquiry(client: TestClient) -> None:
             text("SELECT COUNT(*) FROM course_enquiries")
         ).scalar_one()
     assert enquiry_count == 1
+
+
+def test_academy_empty_course_listing(client: TestClient) -> None:
+    with database.engine.begin() as connection:
+        connection.execute(text("UPDATE academy_courses SET status = 'Inactive'"))
+    assert client.get("/academy/courses").json() == []
+
+
+def test_academy_course_api_failure_is_sanitized(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    class BrokenEngine:
+        def connect(self):
+            raise OperationalError(
+                "SELECT from academy_courses",
+                {},
+                Exception("private academy database details"),
+            )
+
+    monkeypatch.setattr(academy, "engine", BrokenEngine())
+    response = client.get("/academy/courses")
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "The database is temporarily unavailable."
+    }
+    assert "SELECT from academy_courses" not in response.text
+    assert "private academy database details" not in response.text
+    assert "SELECT from academy_courses" not in caplog.text
+    assert "private academy database details" not in caplog.text
+
+
+def test_academy_course_enquiry_submission_failure_is_sanitized(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    class BrokenEngine:
+        def begin(self):
+            raise OperationalError(
+                "INSERT INTO course_enquiries",
+                {},
+                Exception("private course-enquiry database details"),
+            )
+
+    monkeypatch.setattr(academy, "engine", BrokenEngine())
+    response = client.post(
+        "/academy/course-enquiries",
+        json={
+            "course_id": 1,
+            "student_name": "Test Student",
+            "email": "student@example.com",
+        },
+    )
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "The database is temporarily unavailable."
+    }
+    assert "INSERT INTO course_enquiries" not in response.text
+    assert "private course-enquiry database details" not in response.text
+    assert "INSERT INTO course_enquiries" not in caplog.text
+    assert "private course-enquiry database details" not in caplog.text
 
 
 def test_offers_and_staff_expose_only_public_active_data(client: TestClient) -> None:
